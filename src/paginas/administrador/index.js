@@ -12,13 +12,14 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { mainListItems } from './listItems';
+
+
+import Torneos from './torneos'
 
 function Copyright() {
     return (
@@ -119,8 +120,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default class Administrador extends React.Component {
-  render(){
+
+const Administrador = () => {
+
       const classes = useStyles();
       const [open, setOpen] = React.useState(true);
       const handleDrawerOpen = () => {
@@ -180,7 +182,7 @@ export default class Administrador extends React.Component {
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
             <Container maxWidth="lg" className={classes.container}>
-              
+              <Torneos />
               <Box pt={4}>
                 <Copyright />
               </Box>
@@ -188,5 +190,7 @@ export default class Administrador extends React.Component {
           </main>
         </div>
       );
-  }
+  
 }
+
+export default Administrador;

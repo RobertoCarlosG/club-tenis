@@ -5,7 +5,7 @@ import {
     deleteTorneo,
     updateTorneo
 
-} from '../services/firebase';
+} from '../servicios/firebase';
 
 export const TorneoContext = React.createContext({});
 

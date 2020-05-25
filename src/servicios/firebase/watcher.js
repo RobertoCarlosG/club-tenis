@@ -16,7 +16,7 @@ export function watchMatches (callback) {
             
             info.push({
                 ...data,
-                id: doc.id,
+                id: information.id,
             });
         });
         callback();

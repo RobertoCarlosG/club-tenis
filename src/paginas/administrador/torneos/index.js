@@ -1,6 +1,12 @@
 import React from 'react';
 import { TorneoContext } from '../../../contexto/ctx_torneo';
 
+
+/*
+6am probando si sale la consulta
+
+*/
+
 class Torneos extends React.Component{
 
     render(){
@@ -21,6 +27,20 @@ class Torneos extends React.Component{
                             <th>Nombre</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        {torneos.map(row => {
+                            return(
+                                <tr>
+                                    <td>{row.categoria}</td>
+                                    <td>{row.fecha_inicio}</td>
+                                    <td>{row.fecha_fin}</td>
+                                    <td>{row.tipo}</td>
+                                    <td>{row.participantes}</td>
+                                    <td>{row.nombre}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
                 </table>
             </div>
         );
