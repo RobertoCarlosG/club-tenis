@@ -5,7 +5,7 @@ import { db } from './setup'
 
 //MATCHES
 //OBTIENE TODOS LOS CAMPOS
-export function watcherMatches (callback) {
+export function watchMatches (callback) {
     const unsub = db
     .collection('partido')
     .onSnapshot((snapshot) => {

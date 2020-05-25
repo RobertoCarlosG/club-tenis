@@ -119,72 +119,74 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Administrador () {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+export default class Administrador extends React.Component {
+  render(){
+      const classes = useStyles();
+      const [open, setOpen] = React.useState(true);
+      const handleDrawerOpen = () => {
+        setOpen(true);
+      };
+      const handleDrawerClose = () => {
+        setOpen(false);
+      };
+      const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="#fff"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+      return (
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="#fff"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                Administrador
+              </Typography>
+              <IconButton>
+                <AccountCircleIcon style={{ color: '#000' ,}} />
+                <Typography component="h1" variant="h6" color="inherit" noWrap >
+                Felipe Juan Froilán
+                </Typography>
+              </IconButton>
+              
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+            }}
+            open={open}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Administrador
-          </Typography>
-          <IconButton>
-            <AccountCircleIcon style={{ color: '#000' ,}} />
-            <Typography component="h1" variant="h6" color="inherit" noWrap >
-            Felipe Juan Froilán
-            </Typography>
-          </IconButton>
-          
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
+            <div className={classes.toolbarIcon}>
+                
+            <ListItemText primary="CLUB TENIS" style={{ color: '#FFF' ,}} />
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon style={{ color: '#FFF' }} />
+              </IconButton>
+            </div>
             
-        <ListItemText primary="CLUB TENIS" style={{ color: '#FFF' ,}} />
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon style={{ color: '#FFF' }} />
-          </IconButton>
+            <Divider />
+            <List>
+                {mainListItems}
+            </List>
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Container maxWidth="lg" className={classes.container}>
+              
+              <Box pt={4}>
+                <Copyright />
+              </Box>
+            </Container>
+          </main>
         </div>
-        
-        <Divider />
-        <List>
-            {mainListItems}
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
-      </main>
-    </div>
-  );
+      );
+  }
 }
