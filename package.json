@@ -5,12 +5,14 @@
   "dependencies": {
     "@material-ui/core": "^4.10.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
     "cra-template": "1.0.3",
     "firebase": "^7.14.5",
     "firebaseui": "^4.5.0",
     "material-ui": "^0.20.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-material-ui-form-validator": "^2.0.10",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1"
