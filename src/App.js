@@ -7,11 +7,14 @@ import ADM from './paginas/administrador/index'
 function App() {
   return (
     <BrowserRouter>
+    <div id='root'>
       <Switch>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/administrador" component={ADM} /> 
+        <Route  path="/login" component={Login} />
+        <Route path="/administrador" component={ADM} /> 
         <Redirect from="/" to ="/login" />
       </Switch>
+      </div>
+      <div id='modal-root'></div>
     </BrowserRouter>
   );
 }

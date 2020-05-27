@@ -21,16 +21,18 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import TextField from '@material-ui/core/TextField';
 import { mainListItems } from '../listItems';
 
+//CARTAS
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
+//CREAR TORNEO
+import CrearTorneo from './crear_torneo'
+
+
+//BASE DE DATOS
 import { db } from '../../../servicios/firebase/index'
-
-let citiesRef = db.collection('torneos');
-
-                
 
 
 const drawerWidth = 240;
@@ -147,6 +149,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Administrador = () => {
+      
+      const [Xstate, setXstate] = React.useState(null);
+      
+      const handleState = () => {
+        setXstate(1);
+        setOpen(false);
+      };
 
       const classes = useStyles();
       const [open, setOpen] = React.useState(true);
@@ -221,7 +230,8 @@ const Administrador = () => {
                       className={classes.btn_agregar}
                       variant="contained"  
                       startIcon={<AddIcon style={{ color: '#FFF' }} />} 
-                    > 
+                      onClick={handleState}
+                      style={{ color: '#FFF' }} > 
                       AGREGAR PARTIDO
                     </Button>
                   </Grid>
@@ -244,33 +254,38 @@ const Administrador = () => {
               
               <Grid container spacing={4}>
                 {torneos.map(torneo => {
-                                return(
-                                  <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
-                                    <Card className={classes.card}>
-                                      <CardMedia
-                                        className={classes.cardMedia}
-                                        image="https://source.unsplash.com/random"
-                                        title="Image title"
-                                      />
-                                      <CardContent className={classes.cardContent}>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                          {torneo.nombre}
-                                        </Typography>
-                                        <center>
-                                        <Typography>
-                                          {torneo.categoria} - {torneo.tipo}
-                                        </Typography>
-                                        </center>
-                                      </CardContent>
-                                      <CardActions>
-                                      </CardActions>
-                                    </Card>
-                                  </Grid>
-                                  );
-                            })}
+                          return(
+                            <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
+                              <Card className={classes.card}>
+                                <CardMedia
+                                  className={classes.cardMedia}
+                                  image="https://source.unsplash.com/random"
+                                  title="Image title"
+                                />
+                                <CardContent className={classes.cardContent}>
+                                  <Typography gutterBottom variant="h5" component="h2">
+                                    {torneo.nombre}
+                                  </Typography>
+                                  <center>
+                                  <Typography>
+                                    {torneo.categoria} - {torneo.tipo}
+                                  </Typography>
+                                  </center>
+                                </CardContent>
+                                <CardActions>
+                                </CardActions>
+                              </Card>
+                            </Grid>
+                            );
+                      })}
               </Grid>
           </Container>
           </main>
+          {Xstate &&
+            <CrearTorneo 
+              onClose={()=> setXstate(null)}
+            />
+          }
         </div>
       );
   
