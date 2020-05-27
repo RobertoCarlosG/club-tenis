@@ -13,9 +13,12 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
+import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import SearchIcon from '@material-ui/icons/Search';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import TextField from '@material-ui/core/TextField';
 import { mainListItems } from '../listItems';
 
 import Card from '@material-ui/core/Card';
@@ -31,9 +34,6 @@ let citiesRef = db.collection('torneos');
 
 
 const drawerWidth = 240;
-
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   cardGrid: {
-    paddingTop: theme.spacing(8),
+    paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(8),
   },
   card: {
@@ -133,6 +133,16 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     alignSelf: 'center',
   },
+  div_busqueda: {
+    paddingTop: theme.spacing(8),
+    paddingLeft: theme.spacing(6),
+  },
+  btn_agregar:{
+    padding: '10px',
+    backgroundColor: '#039BE5',
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    border: '5px',
+  },
 }));
 
 
@@ -146,8 +156,6 @@ const Administrador = () => {
       const handleDrawerClose = () => {
         setOpen(false);
       };
-      const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
 
       const [torneos, setTorneos] = React.useState([]);
 
@@ -157,7 +165,7 @@ const Administrador = () => {
               setTorneos(data.docs.map(doc => doc.data()))
           }
           fetchData()
-      }, []);
+      }, []);  
       
       return (
         <div className={classes.root}>
@@ -206,7 +214,34 @@ const Administrador = () => {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
+            <div className={classes.div_busqueda}>
+              <Grid container spacing={6}>
+                <Grid item xs={4}>
+                  <Button 
+                      className={classes.btn_agregar}
+                      variant="contained"  
+                      startIcon={<AddIcon style={{ color: '#FFF' }} />} 
+                    > 
+                      AGREGAR PARTIDO
+                    </Button>
+                  </Grid>
+
+                  <Grid item xs={6}>
+                    
+                      <Grid container spacing={1} alignItems="flex-end">
+                        <Grid item>
+                          <SearchIcon />
+                        </Grid>
+                        <Grid item>
+                          <TextField id="input-busqueda" label="Buscar..." />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+              </Grid>
+            </div>
+              <br />
             <Container className={classes.cardGrid} maxWidth="md">
+              
               <Grid container spacing={4}>
                 {torneos.map(torneo => {
                                 return(
