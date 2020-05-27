@@ -19,7 +19,29 @@ export function watchMatches (callback) {
                 id: information.id,
             });
         });
-        callback();
+        callback(info);
     });
+    return unsub;
+}
 
+
+//TORNEOS
+//TORNEOS
+export function watchTorneo (callback) {
+    const unsub = db
+    .collection('torneos')
+    .onSnapshot((snapshot) => {
+        const info = [];
+
+        snapshot.forEach((information) => {
+            const data = information.data();
+            
+            info.push({
+                ...data,
+                id: information.id,
+            });
+        });
+        callback(info);
+    });
+    return unsub;
 }
