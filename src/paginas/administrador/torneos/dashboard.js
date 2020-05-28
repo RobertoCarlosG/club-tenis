@@ -28,7 +28,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 //CREAR TORNEO
-import CrearTorneo from './crear_torneo'
+import CreaTorneo from './CreaTorneo'
 
 
 //BASE DE DATOS
@@ -282,7 +282,7 @@ const Administrador = () => {
           </Container>
           </main>
           {Xstate &&
-            <CrearTorneo 
+            <CreaTorneo 
               onClose={()=> setXstate(null)}
             />
           }
