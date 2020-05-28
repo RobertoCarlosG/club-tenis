@@ -9,6 +9,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl'
 import NativeSelect from '@material-ui/core/NativeSelect';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -18,6 +19,13 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+
+/*
+    
+                                    <option value="" disabled>
+                                        8
+                                    </option>
+*/ 
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -63,12 +71,18 @@ export default function CreaTorneo(props) {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    const [selectedDateFin, setSelectedDateFin] = React.useState(new Date());
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
+    const handleDateChangeFin = (date) => {
+        setSelectedDateFin(date);
       };
 
+      const [selectedDateInicio, setSelectedDateInicio] = React.useState(new Date());
+
+      const handleDateChangeInicio = (date) => {
+          setSelectedDateInicio(date);
+        };
+  
 
     //COPIANDOLE ESTO A LUIS xD
     const { onClose } = props;
@@ -77,6 +91,7 @@ export default function CreaTorneo(props) {
     const [categoria, handleCategoriaChange] = React.useState('');
     const [tipo, handleTipoChange] = React.useState('');
     const [participantes, handleParticipantesChange] = React.useState('');
+
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
     const handleClose = () => {
@@ -129,13 +144,11 @@ export default function CreaTorneo(props) {
                                         onChange={ e => handleCategoriaChange(e.target.value) }
                                         inputProps={{ 'aria-label': 'categoria' }}
                                     >
-                                        <option value="" disabled>
-                                            Categoria
-                                        </option>
                                         <option value='varonil'>Varonil</option>
                                         <option value='femenil'>Femenil</option>
                                         <option value='mixto'>Mixto</option>
                                     </NativeSelect>
+                                    <FormHelperText>Categoria</FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>  
@@ -148,13 +161,11 @@ export default function CreaTorneo(props) {
                                         onChange={ e => handleTipoChange(e.target.value) }
                                         inputProps={{ 'aria-label': 'tipo' }}
                                     >
-                                        <option value="" disabled>
-                                            Tipo
-                                        </option>
-                                        <option value='varonil'>Varonil</option>
-                                        <option value='femenil'>Femenil</option>
-                                        <option value='mixto'>Mixto</option>
+                                    
+                                        <option value='simple'>Simple</option>
+                                        <option value='doble'>Doble</option>
                                     </NativeSelect>
+                                    <FormHelperText>Tipo</FormHelperText>
                                 </FormControl>
                             </Grid>
                         </Grid>
@@ -171,8 +182,8 @@ export default function CreaTorneo(props) {
                                             margin="normal"
                                             id="FechaInicio"
                                             label="Fecha de Inicio"
-                                            value={selectedDate}
-                                            onChange={handleDateChange}
+                                            value={selectedDateInicio}
+                                            onChange={handleDateChangeInicio}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -187,8 +198,8 @@ export default function CreaTorneo(props) {
                                             margin="normal"
                                             id="FechaFin"
                                             label="Fecha de Final"
-                                            value={selectedDate}
-                                            onChange={handleDateChange}
+                                            value={selectedDateFin}
+                                            onChange={handleDateChangeFin}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -207,13 +218,11 @@ export default function CreaTorneo(props) {
                                     onChange={ e => handleParticipantesChange(e.target.value) }
                                     inputProps={{ 'aria-label': 'participantes' }}
                                 >
-                                    <option value="" disabled>
-                                        Participantes
-                                    </option>
                                     <option value={8}>8</option>
                                     <option value={16}>16</option>
                                     <option value={32}>32</option>
                                 </NativeSelect>
+                                <FormHelperText>Participantes</FormHelperText>
                             </FormControl>
                         
                         <br />

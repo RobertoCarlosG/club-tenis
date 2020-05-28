@@ -149,8 +149,14 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Administrador = () => {
-      
       const [Xstate, setXstate] = React.useState(null);
+/*
+
+
+¡HOLA LUIS!
+
+
+*/
       
       const handleState = () => {
         setXstate(1);
@@ -159,6 +165,7 @@ const Administrador = () => {
 
       const classes = useStyles();
       const [open, setOpen] = React.useState(true);
+
       const handleDrawerOpen = () => {
         setOpen(true);
       };
@@ -167,6 +174,10 @@ const Administrador = () => {
       };
 
       const [torneos, setTorneos] = React.useState([]);
+
+      const handleDetails=(id)=>{
+        console.log(id)
+      }
 
       React.useEffect(() => {
           const fetchData = async () => {
@@ -256,7 +267,10 @@ const Administrador = () => {
                 {torneos.map(torneo => {
                           return(
                             <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
-                              <Card className={classes.card}>
+                              
+                              <Card className={classes.card}
+                               onClick={e => handleDetails(console.log(torneo.nombre))}
+                              >
                                 <CardMedia
                                   className={classes.cardMedia}
                                   image="https://source.unsplash.com/random"
@@ -273,6 +287,7 @@ const Administrador = () => {
                                   </center>
                                 </CardContent>
                                 <CardActions>
+                                  
                                 </CardActions>
                               </Card>
                             </Grid>
