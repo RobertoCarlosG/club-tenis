@@ -8,7 +8,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl'
-import FormHelperText from '@material-ui/core/FormHelperText';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
 import Divider from '@material-ui/core/Divider';
@@ -16,9 +15,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
+  MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     },
     selectEmpty: {
       marginTop: theme.spacing(1),
+      width: 'auto'
     },
     form: {
       margin: theme.spacing(2, 2, 2),
@@ -64,7 +63,7 @@ export default function CreaTorneo(props) {
     const classes = useStyles();
     const theme = useTheme();
 
-    const [selectedDate, setSelectedDate] = React.useState(new Date('2020-06-01T21:11:54'));
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -104,11 +103,11 @@ export default function CreaTorneo(props) {
                     </Typography>
                 </DialogTitle>
                 <DialogContent>
-                    <Divider />
-                    <line />
+                    <Divider variant='middle'/>
+                    <br />
                     <ValidatorForm onSubmit={handleSubmit}>
                         <TextValidator
-                            id="email"
+                            id="nombre"
                             placeholder="Nombre del Torneo"
                             value={nombre}
                             onChange={ e => setNombre(e.target.value) }
@@ -119,71 +118,82 @@ export default function CreaTorneo(props) {
                         />
                         <br />
                         <br />
-                            <FormControl className={classes.formControl}>
-                                <NativeSelect
-                                    className={classes.selectEmpty}
-                                    value={categoria}
-                                    name="categoria"
-                                    onChange={ e => handleCategoriaChange(e.target.value) }
-                                    inputProps={{ 'aria-label': 'categoria' }}
-                                >
-                                    <option value="" disabled>
-                                        Categoria
-                                    </option>
-                                    <option value='varonil'>Varonil</option>
-                                    <option value='femenil'>Femenil</option>
-                                    <option value='mixto'>Mixto</option>
-                                </NativeSelect>
-                                <FormHelperText>required</FormHelperText>
-                            </FormControl>
-                            <FormControl className={classes.formControl}>
-                                <NativeSelect
-                                    className={classes.selectEmpty}
-                                    value={tipo}
-                                    name="tipo"
-                                    onChange={ e => handleTipoChange(e.target.value) }
-                                    inputProps={{ 'aria-label': 'tipo' }}
-                                >
-                                    <option value="" disabled>
-                                        Tipo
-                                    </option>
-                                    <option value='varonil'>Varonil</option>
-                                    <option value='femenil'>Femenil</option>
-                                    <option value='mixto'>Mixto</option>
-                                </NativeSelect>
-                                <FormHelperText>Placeholder</FormHelperText>
-                            </FormControl>
-
-                        <br /> 
+                        <Grid container justify="space-around" spacing={2}>
+                            <Grid item xs={6}>  
+                                <FormControl className={classes.formControl} fullWidth>
+                                
+                                    <NativeSelect
+                                        className={classes.selectEmpty}
+                                        value={categoria}
+                                        name="categoria"
+                                        onChange={ e => handleCategoriaChange(e.target.value) }
+                                        inputProps={{ 'aria-label': 'categoria' }}
+                                    >
+                                        <option value="" disabled>
+                                            Categoria
+                                        </option>
+                                        <option value='varonil'>Varonil</option>
+                                        <option value='femenil'>Femenil</option>
+                                        <option value='mixto'>Mixto</option>
+                                    </NativeSelect>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={6}>  
+                                <FormControl className={classes.formControl} fullWidth >
+                                
+                                    <NativeSelect
+                                        className={classes.selectEmpty}
+                                        value={tipo}
+                                        name="tipo"
+                                        onChange={ e => handleTipoChange(e.target.value) }
+                                        inputProps={{ 'aria-label': 'tipo' }}
+                                    >
+                                        <option value="" disabled>
+                                            Tipo
+                                        </option>
+                                        <option value='varonil'>Varonil</option>
+                                        <option value='femenil'>Femenil</option>
+                                        <option value='mixto'>Mixto</option>
+                                    </NativeSelect>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
                         <br />
 
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid container justify="space-around">
-                                    <KeyboardDatePicker
-                                    disableToolbar
-                                    variant="inline"
-                                    format="MM/dd/yyyy"
-                                    margin="normal"
-                                    id="date-picker-inline"
-                                    label="Date picker inline"
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                    />
-                                    <KeyboardDatePicker
-                                    margin="normal"
-                                    id="date-picker-dialog"
-                                    label="Date picker dialog"
-                                    format="MM/dd/yyyy"
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    KeyboardButtonProps={{
-                                        'aria-label': 'change date',
-                                    }}
-                                    />
-                                    
+                                <Grid container justify="space-around" spacing={2}>
+                                    <Grid item xs={6}>  
+                                        <KeyboardDatePicker
+                                            
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="FechaInicio"
+                                            label="Fecha de Inicio"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={6}>  
+                                        <KeyboardDatePicker
+                                            
+                                            disableToolbar
+                                            variant="inline"
+                                            format="MM/dd/yyyy"
+                                            margin="normal"
+                                            id="FechaFin"
+                                            label="Fecha de Final"
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            KeyboardButtonProps={{
+                                                'aria-label': 'change date',
+                                            }}
+                                        />
+                                    </Grid>
                                 </Grid>
                             </MuiPickersUtilsProvider>    
                         <br />
@@ -208,25 +218,27 @@ export default function CreaTorneo(props) {
                         
                         <br />
                         <br />
-                        <row>
-                            <Button
-                                type="submit"
-                                className={classes.buttonAccept}
-                                variant="contained"
-                                color="primary"
-                            >
-                                Guardar
-                            </Button>
-                            <Button
-                                type="submit"
-                                className={classes.buttonCan}
-                                variant="contained"
-                                color="primary"
-                                onClick={handleClose}
-                            >
-                                Cancelar
-                            </Button>
-                        </row>
+                        <Grid container justify="space-around" spacing={2}>
+                                    <Grid item xs={6}>  
+                                <Button
+                                    type="submit"
+                                    className={classes.buttonAccept}
+                                    variant="contained"
+                                    color="primary"
+                                >
+                                    Guardar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    className={classes.buttonCan}
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={handleClose}
+                                >
+                                    Cancelar
+                                </Button>
+                            </Grid>
+                        </Grid>
                     </ValidatorForm>
                 </DialogContent>
 
