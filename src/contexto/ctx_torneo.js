@@ -1,10 +1,9 @@
 import React from 'react';
 import {
-    watchMatches,
     createTorneo,
     deleteTorneo,
-    updateTorneo
-
+    updateTorneo,
+    watchTorneo
 } from '../servicios/firebase';
 
 export const TorneoContext = React.createContext({});
@@ -17,7 +16,7 @@ export class TorneoContextProvider extends React.Component {
     }
 
     componentDidMount() {
-        this.torneoWatcherUnsub = watchMatches((torneos) => {
+        this.torneoWatcherUnsub = watchTorneo((torneos) => {
             this.setState({ torneos });
         });
     }
