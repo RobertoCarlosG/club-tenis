@@ -6,8 +6,6 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -98,7 +96,7 @@ const Login = ({ history }) => {
       try {
         await auth
           .signInWithEmailAndPassword(email.value, password.value);
-        history.push('/Administrador');
+        history.push('/administrador');
         console.log('Logeado');
       } catch(error) {
         console.log(error);
@@ -110,7 +108,7 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if(currentUser) {
-    return <Redirect to="/Administrador" />
+    return <Redirect to="/administrador" />
   }
 
   return (

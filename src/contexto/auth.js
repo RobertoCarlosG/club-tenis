@@ -9,16 +9,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     watchUserChanges((user) => {
-        // if(user) {
-            setCurrentUser(user);
-            setPending(false);
-        // }
-        // else {
-        //     setCurrentUser(null);
-        //     setPending(true);
-        // }
+      setCurrentUser(user);
+      setPending(false);
     });
-  });
+  }, []);
 
   if(pending){
     return <>Loading...</>
