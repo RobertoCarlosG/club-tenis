@@ -19,6 +19,7 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
+import { db } from '../../../servicios/firebase/index'
 
 /*
     
@@ -91,7 +92,7 @@ export default function CreaTorneo(props) {
     const [categoria, handleCategoriaChange] = React.useState('');
     const [tipo, handleTipoChange] = React.useState('');
     const [participantes, handleParticipantesChange] = React.useState('');
-
+    
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   
     const handleClose = () => {
@@ -100,7 +101,32 @@ export default function CreaTorneo(props) {
 
     const handleSubmit = () => {
         // your submit logic
+        const Torneox = {
+            nombre:nombre,
+            tipo:tipo,
+            categoria:categoria,
+            fecha_inicio:selectedDateInicio,
+            fecha_fin:selectedDateFin,
+            participantes:participantes,
+        };
+
+        db.collection('torneos').doc(Torneox.nombre).set(Torneox);
+        console.log('¿exito?');
         props.onClose();
+    }
+
+    function updates(id){
+        const Torneox = {
+            nombre:nombre,
+            tipo:tipo,
+            categoria:categoria,
+            fecha_inicio:selectedDateInicio,
+            fecha_fin:selectedDateFin,
+            participantes:participantes,
+        };
+
+        db.collection('torneos').doc(id).set(Torneox);
+        return (console.log('¿exito?'));
     }
 
 
@@ -234,6 +260,7 @@ export default function CreaTorneo(props) {
                                     className={classes.buttonAccept}
                                     variant="contained"
                                     color="primary"
+                                    onClick={updates('Roberto')}
                                 >
                                     Guardar
                                 </Button>

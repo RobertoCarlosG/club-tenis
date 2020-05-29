@@ -11,7 +11,7 @@ function App() {
       <Switch>
         <Route  path="/login" component={Login} />
         <Route path="/administrador" component={ADM} /> 
-        <Redirect from="/" to ="/login" />
+        <Redirect from="/" to ="/administrador" />
       </Switch>
       </div>
       <div id='modal-root'></div>
