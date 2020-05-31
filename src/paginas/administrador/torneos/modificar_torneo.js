@@ -240,16 +240,16 @@ export default function ModificarTorneo(props) {
 									</Button>
 							</Grid>
 							<Grid item xs={6} sm={5} justify="center">
-									<Button
-										fullWidth
-										type="submit"
-										className={classes.buttonCan}
-										variant="contained"
-										color="primary"
-										onClick={handleClose}
+                <Button
+                  fullWidth
+                  type="submit"
+                  className={classes.buttonCan}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleClose}
 								>
-										Cancelar
-									</Button>
+									Cancelar
+								</Button>
 							</Grid>
 						</Grid>
 					</ValidatorForm>
