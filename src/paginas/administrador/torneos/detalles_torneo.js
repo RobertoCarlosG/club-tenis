@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
-import Topbar from '../componentes/topBar';
-import Sidebar from '../componentes/sideBar';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,23 +9,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SwipeableViews from 'react-swipeable-views';
-import Container from '@material-ui/core/Container';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Fab from '@material-ui/core/Fab';
-import ImageIcon from '@material-ui/icons/Image';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import img from '../../../imagenes/Logo5.svg';
 import { IconButton } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
-import Avatar from '@material-ui/core/Avatar';
 import ModificarTorneo from './modificar_torneo';
 
 const useStyles = makeStyles(theme => ({
@@ -38,12 +20,6 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('sm')]: {
       paddingTop: 64
     }
-  },
-  shiftContent: {
-    paddingLeft: 240
-  },
-  content: {
-    height: '100%'
   },
   tabs: {
     marginTop: theme.spacing(2),
@@ -227,23 +203,7 @@ const Detalles = props => {
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
-    <div
-      className={clsx({
-        [classes.root]: true,
-        [classes.shiftContent]: isDesktop
-      })}
-    >
-      <Topbar 
-        onSidebarOpen={handleSidebarOpen} 
-        tipoUsuario="Administrador"
-        nombre="Felipe Juan Froilán"
-      />
-      <Sidebar
-        onClose={handleSidebarClose}
-        open={shouldOpenSidebar}
-        variant={isDesktop ? 'persistent' : 'temporary'}
-      />
-      <br />
+    <div className={ classes.root }>
       <Grid container spacing={2} justify="center" alignItems="center">
         <Grid item xs={12} sm={10} justify="center">
           <Paper square elevation={3}>
@@ -265,207 +225,13 @@ const Detalles = props => {
             onChangeIndex={handleChangeIndex}
           >
             <TabPanel value={value} index={0} dir={theme.direction}>
-              <Container className={classes.cardGrid} maxWidth="md">
-                <Grid container spacing={2}>
-                  <Grid item xs={6} sm={3}>
-                    <Button
-                      fullWidth
-                      type="submit"
-                      className={classes.btn}
-                      variant="contained"
-                      color="primary"
-                      onClick={ handleModificarTorneo }
-                    >
-                      Mofificar torneo
-                    </Button>
-                  </Grid>
-                  <Grid item xs={6} sm={3} >
-                    <Button
-                      fullWidth
-                      type="submit"
-                      className={classes.btn_2}
-                      variant="contained"
-                      color="secondary"
-                      onClick={ handleModificarTorneo }
-                    >
-                      Finalizar torneo
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Card className={classes.card_1}>
-                      <CardContent>
-                        <Typography className={classes.card_title} noWrap align="center">
-                          Grand Slam
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.card_1}>
-                      <CardContent className={classes.content}>
-                          <CardMedia
-                            className={classes.media}
-                            image={ img }
-                            title="Cambiar imagen"
-                          />
-                          <Fab aria-label="Cambiar" className={classes.fab} color="secondary">
-                            <ImageIcon />
-                          </Fab>
-                        </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.borde}>
-                      <CardContent className={classes.content}>
-                        <Typography className={classes.title} align="center">
-                          Fecha inicial
-                        </Typography>
-                        <Typography className={classes.title_2} align="center">
-                          10
-                        </Typography>
-                        <Typography className={classes.title} align="center">
-                          Junio - 2020
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.borde}>
-                      <CardContent className={classes.content}>
-                        <Typography className={classes.title} align="center">
-                          Fecha Final
-                        </Typography>
-                        <Typography className={classes.title_3} align="center">
-                          10
-                        </Typography>
-                        <Typography className={classes.title} align="center">
-                          Junio - 2020
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.borde}>
-                      <CardContent className={classes.content_2}>
-                        <Typography className={classes.title} align="center">
-                          Varonil - Simple
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.borde}>
-                      <CardContent className={classes.content_2}>
-                        <Typography className={classes.title} align="center">
-                          16 Participantes
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Card className={classes.borde}>
-                      <CardContent className={classes.content_2}>
-                        <Typography className={classes.title} align="center">
-                          Activo
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </Container>
+              Hola
             </TabPanel>
             <TabPanel value={value} index={1} dir={theme.direction}>
-              <Container className={classes.cardGrid} maxWidth="md">
-                <Grid container spacing={2}>
-                  <Grid item xs={6} sm={3}>
-                    <Button
-                      fullWidth
-                      type="submit"
-                      className={classes.btn}
-                      variant="contained"
-                      color="primary"
-                      onClick={ handleModificarTorneo }
-                    >
-                      Realizar Sorteo
-                    </Button>
-                  </Grid>
-                  <br />
-                  <Grid item xs={12}>
-                    <TableContainer component={Paper}>
-                      <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="left">Jugador 1</TableCell>
-                            <TableCell align="left">Jugador 2</TableCell>
-                            <TableCell align="left">Estado</TableCell>
-                            <TableCell align="left">Fecha</TableCell>
-                            <TableCell align="left">Hora</TableCell>
-                            <TableCell align="left">Editar</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {rows.map((row) => (
-                            <TableRow key={row.jugador1}>
-                              <TableCell component="th" scope="row" align="left">
-                                {row.jugador1}
-                              </TableCell>
-                              <TableCell align="left">{row.jugador2}</TableCell>
-                              <TableCell align="left">{row.estado}</TableCell>
-                              <TableCell align="left">{row.fecha}</TableCell>
-                              <TableCell align="left">{row.hora}</TableCell>
-                              <TableCell align="left">{editIcon}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
-                </Grid>
-              </Container>
+              Hola
             </TabPanel>
             <TabPanel value={value} index={2} dir={theme.direction}>
-              <Container className={classes.cardGrid} maxWidth="md">
-                <Grid container spacing={2}>
-                  <Grid item xs={6} sm={3}>
-                    <Typography className={classes.title} align="center">
-                      Participantes: 16
-                    </Typography>
-                  </Grid>
-                  <br />
-                  <Grid item xs={12}>
-                    <TableContainer component={Paper}>
-                      <Table className={classes.table} aria-label="simple table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell align="left">&nbsp;&nbsp;&nbsp;Nombre</TableCell>
-                            <TableCell align="left">Edad</TableCell>
-                            <TableCell align="left">Federación</TableCell>
-                            <TableCell align="left">Puntos</TableCell>
-                            <TableCell align="left">Rank</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {jug.map((jug) => (
-                            <TableRow key={jug.nombre}>
-                              <TableCell component="th" scope="row" align="center">
-                                <div className={classes.nameContainer}>
-                                  &nbsp;&nbsp;&nbsp;
-                                  <Avatar>{jug.av}</Avatar> &nbsp;&nbsp;&nbsp;
-                                  <Typography variant="body1">{jug.nombre}</Typography>
-                                </div>
-                              </TableCell>
-                              <TableCell align="left">{jug.edad}</TableCell>
-                              <TableCell align="left">{jug.federacion}</TableCell>
-                              <TableCell align="left">{jug.puntos}</TableCell>
-                              <TableCell align="left">{jug.rank}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
-                </Grid>
-              </Container>
+              Hola
             </TabPanel>
           </SwipeableViews>
         </Grid>

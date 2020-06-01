@@ -36,6 +36,7 @@ const Topbar = props => {
     <AppBar
       { ...rest }
       className={ clsx(classes.root, className) }
+      position="fixed"
     >
       <Toolbar>
         <Hidden lgUp>
@@ -49,7 +50,7 @@ const Topbar = props => {
         <img
           alt="Logo"
           src={ logo }
-          height={ 55 }
+          height={ 54 }
         />
         <Typography variant="h6" noWrap className={ classes.title } align="center">
           { tipoUsuario }

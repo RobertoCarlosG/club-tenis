@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -8,6 +8,7 @@ import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import { Paper, Input } from '@material-ui/core';
 import img from '../../../imagenes/Logo5.svg';
+import { TorneoContext } from '../../../contexto/ctx_torneo';
 
 //CARTAS
 import Card from '@material-ui/core/Card';
@@ -25,18 +26,9 @@ function cambiarFondo() {
   document.body.style = 'background: F7F7F7;';
 }
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3),
-  },
-  fixedHeight: {
-    height: 240,
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
+    padding: theme.spacing(2),
   },
   card: {
     height: '100%',
@@ -61,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     display: 'flex',
-    flexBasis: 420
+    flexBasis: 420,
+    borderColor: '#192D3E'
   },
   pIcon: {
     color: theme.palette.icon,
@@ -79,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     fontSize: '14px',
     lineHeight: '16px',
-    letterSpacing: '-0.05px'
+    letterSpacing: '-0.05px',
   },
   title: {
     fontSize: 24,
@@ -91,13 +84,17 @@ const Administrador = () => {
   const classes = useStyles();
   cambiarFondo();
   
-  const [Xstate, setXstate] = React.useState(null);
-  const [torneos, setTorneos] = React.useState([]);
+  // State
+  const [open, setOpen] = React.useState(false);
   const [busqueda, setBusqueda] = React.useState('');
 
-  const handleState = () => {
-    setXstate(1);
-  };
+  // Context
+  const { torneos } = useContext(TorneoContext);
+  console.log(torneos);
+
+  const handleCreartorneo = () => {
+    setOpen(true);
+  }
 
   const handleDetails=(id)=>{
     console.log(id);
@@ -105,34 +102,33 @@ const Administrador = () => {
   }
 
   const handleBusqueda = (event) => {
-    setBusqueda(event.target.value);
+    var busq = event.target.value; 
+    setBusqueda(busq);
   }
 
-  React.useEffect(() => {
-      const fetchData = async () => {
-          const data = await db.collection('torneos').get()
-          setTorneos(data.docs.map(doc => doc.data()))
-      }
-      fetchData()
-  }, []);  
-  
+  const resultados = !busqueda
+    ? torneos
+    : torneos.filter(torneo =>
+        torneo.nombre.toLowerCase().includes(busqueda.toLowerCase())
+      );  
+
   return (
-    <div>
-      <Container className={classes.cardGrid} maxWidth="md">
+    <div className={classes.root}>
+      <Container maxWidth="lg">
         <Grid container spacing={3} direction="row" justify="space-between">
           <Grid item xs={6} sm={4}>
             <Button
               fullWidth
               className={ classes.btn_agregar }
               variant="contained"
-              onClick={ handleState }
+              onClick={ handleCreartorneo }
               color="secondary"
             > 
               <AddIcon className={ classes.pIcon }/>
               Crear Torneo
             </Button>
           </Grid>
-          <Grid item xs={6} sm={5}>
+          <Grid item xs={6}>
             <Paper
               variant="outlined"
               className={classes.paper}
@@ -143,18 +139,19 @@ const Administrador = () => {
                 className={classes.input}
                 disableUnderline
                 placeholder="Buscar torneo..."
+                value={busqueda}
                 onChange={handleBusqueda}
               />
             </Paper>
           </Grid>
         </Grid>
-        <br />    
+        <br />
         <Grid container spacing={4}>
           { torneos.map(torneo => {
             return(
               <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
                 <Card className={classes.card}
-                  onClick={ () => handleDetails(torneo.nombre) }
+                  onClick={ () => handleDetails(torneo.id) }
                 >
                   <CardActionArea> 
                   <CardMedia
@@ -181,9 +178,9 @@ const Administrador = () => {
         </Grid>
       </Container>
 
-      {Xstate &&
+      {open &&
         <CreaTorneo 
-          onClose={()=> setXstate(null)}
+          onClose={()=> setOpen(false)}
         />
       }
     </div>

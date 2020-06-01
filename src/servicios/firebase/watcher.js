@@ -49,19 +49,20 @@ export function watchMatches (callback) {
 //TORNEOS
 export function watchTorneo (callback) {
     const unsub = db
-    .collection('torneos')
-    .onSnapshot((snapshot) => {
-        const info = [];
+        .collection("torneos")
+        .onSnapshot((snapshot) => {
+            const info = [];
 
-        snapshot.forEach((information) => {
-            const data = information.data();
-            
-            info.push({
-                ...data,
-                id: information.id,
+            snapshot.forEach((information) => {
+                const data = information.data();
+                
+                info.push({
+                    ...data,
+                    id: information.id,
+                });
             });
+            callback(info);
         });
-        callback(info);
-    });
+
     return unsub;
 }

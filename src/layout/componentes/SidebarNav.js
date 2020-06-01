@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, withRouter } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     fontWeight: theme.typography.fontWeightMedium,
     '&:hover': {
-      backgroundColor: '#62C1EF',
+      backgroundColor: '#364756',
     }
   },
   icon: {
@@ -72,6 +72,7 @@ const SidebarNav = props => {
             className={ classes.button }
             component={ CustomRouterLink }
             to={ page.href }
+            fullWidth
           >
             &nbsp;&nbsp;&nbsp;
             <div className={ classes.icon }>{ page.icon }</div>
@@ -88,4 +89,4 @@ SidebarNav.propTypes = {
   pages: PropTypes.array.isRequired
 };
 
-export default SidebarNav;
+export default withRouter(SidebarNav);

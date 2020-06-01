@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { useMediaQuery } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 
-import { SidebarAdm, Topbar } from './componentes';
+import {AuthContext} from '../contexto/auth';
+import { SidebarAdm, Topbar, Footer } from './componentes';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   shiftContent: {
+    paddingTop: 16,
     paddingLeft: 240
   },
   content: {
@@ -32,6 +35,7 @@ const MainAdm = props => {
   });
 
   const [openSidebar, setOpenSidebar] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
   const handleSidebarOpen = () => {
     setOpenSidebar(true);
@@ -53,16 +57,19 @@ const MainAdm = props => {
       <Topbar 
         onSidebarOpen={ handleSidebarOpen }
         tipoUsuario="Administrador"
-        nombre="Felipe Juan Froilán"
+        nombre={currentUser.email}
       />
       <SidebarAdm
         onClose={ handleSidebarClose }
         open={ shouldOpenSidebar }
         variant={ isDesktop ? 'persistent' : 'temporary' }
       />
-      <main className={ classes.content }>
+      <Container>
+      
         { children }
-      </main>
+        <Footer />
+      
+      </Container>
     </div>
   );
 };

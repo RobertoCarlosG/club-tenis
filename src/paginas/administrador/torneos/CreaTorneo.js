@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Button from '@material-ui/core/Button';
@@ -7,10 +7,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl'
-import NativeSelect from '@material-ui/core/NativeSelect';
-import FormHelperText from '@material-ui/core/FormHelperText';
-
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -20,239 +20,246 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 
-/*
-    
-                                    <option value="" disabled>
-                                        8
-                                    </option>
-*/ 
+import { createTorneo } from '../../../servicios/firebase';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: '25ch',
-    },
-    formControl: {
-        margin: theme.spacing(0),
-        minWidth: 120,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(1),
-      width: 'auto'
-    },
-    form: {
-      margin: theme.spacing(2, 2, 2),
-    },
-    buttonCan: {
-        margin: theme.spacing(1),
-        backgroundColor: '#FFF',
-        borderRadius: '5px',
-        color: '#000',
-        '&:hover': {
-            backgroundColor: '#C4C4C4',
-            }
-    },
-    buttonAccept:{
-        margin: theme.spacing(1),
-        backgroundColor: '#192D3E',
-        borderRadius: '5px',
-        '&:hover': {
-        backgroundColor: '#3A4750',
-        }
-    },
-  }));
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+	textField: {
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1),
+		width: '25ch',
+	},
+	formControl: {
+			margin: theme.spacing(0),
+			minWidth: 120,
+	},
+	selectEmpty: {
+		marginTop: theme.spacing(1),
+		width: 'auto'
+	},
+	form: {
+		margin: theme.spacing(1, 1, 1),
+	},
+	buttonCan: {
+		padding: theme.spacing(1, 0, 1),
+		textTransform: 'none',
+		backgroundColor: '#FFF',
+		borderRadius: '5px',
+		color: '#000',
+    borderColor: '#192D3E',
+    fontSize: 18,
+		'&:hover': {
+			backgroundColor: '#C4C4C4',
+		}
+	},
+	buttonAccept:{
+		padding: theme.spacing(1, 0, 1),
+		textTransform: 'none',
+		backgroundColor: '#192D3E',
+    borderRadius: '5px',
+    fontSize: 18,
+		'&:hover': {
+			backgroundColor: '#3A4750',
+		}
+	},
+}));
 
-export default function CreaTorneo(props) {
-    const classes = useStyles();
-    const theme = useTheme();
+export default function CrearTorneo(props) {
+	const classes = useStyles();
+	const theme = useTheme();
 
-    const [selectedDateFin, setSelectedDateFin] = React.useState(new Date());
+	const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleDateChangeFin = (date) => {
-        setSelectedDateFin(date);
-      };
+  const [open] = useState(true);
+	const [nombre, setNombre] = useState('');
+	const [categoria, setCategoria] = useState('');
+	const [tipo, setTipo] = useState('');
+	const [participantes, setParticipantes] = useState('');
+	const [dateFin, setDateFin] = useState(new Date());
+	const [dateInicio, setDateInicio] = useState(new Date());
 
-      const [selectedDateInicio, setSelectedDateInicio] = React.useState(new Date());
+	const handleDateChangeFin = (date) => {
+		setDateFin(date);
+	};
+	
+	const handleDateChangeInicio = (date) => {
+		setDateInicio(date);
+	};
 
-      const handleDateChangeInicio = (date) => {
-          setSelectedDateInicio(date);
-        };
-  
+	const handleClose = () => {
+		props.onClose();
+	};
 
-    //COPIANDOLE ESTO A LUIS xD
-    const { onClose } = props;
-    const [open] = React.useState(true);
-    const [nombre, setNombre] = React.useState('');
-    const [categoria, handleCategoriaChange] = React.useState('');
-    const [tipo, handleTipoChange] = React.useState('');
-    const [participantes, handleParticipantesChange] = React.useState('');
-
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  
-    const handleClose = () => {
-      props.onClose();
+	const handleSubmit = async () => {
+    const data = {
+      nombre: nombre, 
+      categoria: categoria, 
+      tipo: tipo, 
+      participantes: participantes, 
+      fecha_inicio: dateInicio, 
+      fecha_fin: dateFin 
     };
+    console.log(data);
+    await createTorneo(data);
+    
+    props.onClose();
+	}
 
-    const handleSubmit = () => {
-        // your submit logic
-        props.onClose();
-    }
-
-
-    const node = (
-        <div>
-            <Dialog
-                fullScreen={fullScreen}
-                open={open}
-                onClose={onClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="form-dialog-title">
-                    <Typography component="h1" align="center">
-                        RCrear Torneo
-                    </Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <Divider variant='middle'/>
-                    <br />
-                    <ValidatorForm onSubmit={handleSubmit}>
-                        <TextValidator
-                            id="nombre"
-                            placeholder="Nombre del Torneo"
-                            value={nombre}
-                            onChange={ e => setNombre(e.target.value) }
-                            required
-                            errorMessages={['Este campo es necesario']}
-                            fullWidth
-                            autoFocus
-                        />
-                        <br />
-                        <br />
-                        <Grid container justify="space-around" spacing={2}>
-                            <Grid item xs={6}>  
-                                <FormControl className={classes.formControl} fullWidth>
-                                
-                                    <NativeSelect
-                                        className={classes.selectEmpty}
-                                        value={categoria}
-                                        name="categoria"
-                                        onChange={ e => handleCategoriaChange(e.target.value) }
-                                        inputProps={{ 'aria-label': 'categoria' }}
-                                    >
-                                        <option value='varonil'>Varonil</option>
-                                        <option value='femenil'>Femenil</option>
-                                        <option value='mixto'>Mixto</option>
-                                    </NativeSelect>
-                                    <FormHelperText>Categoria</FormHelperText>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>  
-                                <FormControl className={classes.formControl} fullWidth >
-                                
-                                    <NativeSelect
-                                        className={classes.selectEmpty}
-                                        value={tipo}
-                                        name="tipo"
-                                        onChange={ e => handleTipoChange(e.target.value) }
-                                        inputProps={{ 'aria-label': 'tipo' }}
-                                    >
-                                    
-                                        <option value='simple'>Simple</option>
-                                        <option value='doble'>Doble</option>
-                                    </NativeSelect>
-                                    <FormHelperText>Tipo</FormHelperText>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                        <br />
-
-                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Grid container justify="space-around" spacing={2}>
-                                    <Grid item xs={6}>  
-                                        <KeyboardDatePicker
-                                            
-                                            disableToolbar
-                                            variant="inline"
-                                            format="MM/dd/yyyy"
-                                            margin="normal"
-                                            id="FechaInicio"
-                                            label="Fecha de Inicio"
-                                            value={selectedDateInicio}
-                                            onChange={handleDateChangeInicio}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={6}>  
-                                        <KeyboardDatePicker
-                                            
-                                            disableToolbar
-                                            variant="inline"
-                                            format="MM/dd/yyyy"
-                                            margin="normal"
-                                            id="FechaFin"
-                                            label="Fecha de Final"
-                                            value={selectedDateFin}
-                                            onChange={handleDateChangeFin}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </MuiPickersUtilsProvider>    
-                        <br />
-                        <br />
-                        
-                        <FormControl className={classes.formControl} fullWidth>
-                                <NativeSelect
-                                    className={classes.selectEmpty}
-                                    value={participantes}
-                                    name="participantes"
-                                    onChange={ e => handleParticipantesChange(e.target.value) }
-                                    inputProps={{ 'aria-label': 'participantes' }}
-                                >
-                                    <option value={8}>8</option>
-                                    <option value={16}>16</option>
-                                    <option value={32}>32</option>
-                                </NativeSelect>
-                                <FormHelperText>Participantes</FormHelperText>
-                            </FormControl>
-                        
-                        <br />
-                        <br />
-                        <Grid container justify="space-around" spacing={2}>
-                                    <Grid item xs={6}>  
-                                <Button
-                                    type="submit"
-                                    className={classes.buttonAccept}
-                                    variant="contained"
-                                    color="primary"
-                                >
-                                    Guardar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    className={classes.buttonCan}
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={handleClose}
-                                >
-                                    Cancelar
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </ValidatorForm>
-                </DialogContent>
-
-            </Dialog>
-        </div>
-    );
-    return ReactDOM.createPortal(node,document.getElementById('modal-root'));
+	const node = (
+		<div>
+			<Dialog
+				fullScreen={fullScreen}
+				open={open}
+				onClose={ props.onClose }
+				aria-labelledby="responsive-dialog-title"
+			>
+				<DialogTitle id="form-dialog-title">
+					<Typography component="h1" variant="h6" align="center">
+							Crear Torneo
+					</Typography>
+				</DialogTitle>
+				<Divider variant='middle'/>
+				<DialogContent>
+					<ValidatorForm onSubmit={ handleSubmit }>
+						<Grid container spacing={3} justify="center" alignItems="center">
+							<Grid item xs={12} sm={10} justify="center">
+								<TextValidator
+									variant="outlined"
+									margin="normal"
+									id="nombre"
+									label="Nombre"
+									placeholder="p.e. Grand Slam"
+									name="nombre"
+									autoComplete="name"
+									value={ nombre }
+									onChange={ e => setNombre(e.target.value) }
+									validators={['required']}
+									errorMessages={['Este campo es requerido']}
+									required
+									fullWidth
+									autoFocus
+								/>
+							</Grid>
+							<br />
+							<Grid item xs={6} sm={5} justify="center">
+								<FormControl variant="outlined" className={classes.formControl} fullWidth>
+									<InputLabel id="categoria">Categoría</InputLabel>
+									<Select
+										labelId="categoria"
+										id="categoria"
+										value={ categoria }
+										onChange={ e => setCategoria(e.target.value) }
+										label="Categoría"
+									>
+										<MenuItem value="Varonil">Varonil</MenuItem>
+										<MenuItem value="Femenil">Femenil</MenuItem>
+										<MenuItem value="Mixto">Mixto</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+							<Grid item xs={6} sm={5} justify="center">
+								<FormControl variant="outlined" className={classes.formControl} fullWidth>
+									<InputLabel id="tipo">Tipo</InputLabel>
+									<Select
+										labelId="tipo"
+										id="tipo"
+										value={ tipo }
+										onChange={ e => setTipo(e.target.value) }
+										label="tipo"
+									>
+										<MenuItem value="Simple">Simple</MenuItem>
+										<MenuItem value="Doble">Doble</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+							<br />
+							<MuiPickersUtilsProvider className={classes.formControl} utils={DateFnsUtils}>
+								<Grid item xs={6} sm={5} justify="center">
+									<KeyboardDatePicker
+										disableToolbar
+										fullWidth
+										inputVariant="outlined"
+										variant="inline"
+										format="MM/dd/yyyy"
+										margin="normal"
+										id="FechaInicio"
+										label="Fecha de Inicio"
+										minDate={ Date.now() }
+										value={ dateInicio }
+										onChange={ handleDateChangeInicio }
+										KeyboardButtonProps={{
+												'aria-label': 'change date',
+										}}
+									/>
+								</Grid>
+								<Grid item xs={6} sm={5} justify="center">
+									<KeyboardDatePicker
+										disableToolbar
+										fullWidth
+										inputVariant="outlined"
+										margin="normal"
+										variant="inline"
+										id="FechaFin"
+										label="Fecha de Final"
+										format="MM/dd/yyyy"
+										minDate={ Date.now() }
+										value={ dateFin }
+										onChange={ handleDateChangeFin }
+										KeyboardButtonProps={{
+												'aria-label': 'change date',
+										}}
+									/>
+								</Grid>
+							</MuiPickersUtilsProvider>
+							<br />
+							<Grid item xs={12} sm={10} justify="center">
+								<FormControl variant="outlined" className={classes.formControl} fullWidth>
+									<InputLabel id="participantes">Participantes</InputLabel>
+									<Select
+										labelId="participantes"
+										id="participantes"
+										value={ participantes }
+										onChange={ e => setParticipantes(e.target.value) }
+										label="Participantes"
+									>
+										<MenuItem value={ 8 }>8</MenuItem>
+										<MenuItem value={ 16 }>16</MenuItem>
+										<MenuItem value={ 32 }>32</MenuItem>
+									</Select>
+								</FormControl>
+							</Grid>
+							<br />
+							<Grid item xs={6} sm={5} justify="center">  
+									<Button
+										fullWidth
+										type="submit"
+										className={classes.buttonAccept}
+										variant="contained"
+										color="primary"
+									>
+										Guardar
+									</Button>
+							</Grid>
+							<Grid item xs={6} sm={5} justify="center">
+                <Button
+                  fullWidth
+                  type="submit"
+                  className={classes.buttonCan}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleClose}
+								>
+									Cancelar
+								</Button>
+							</Grid>
+						</Grid>
+					</ValidatorForm>
+				</DialogContent>
+			</Dialog>
+		</div>
+	);
+	return ReactDOM.createPortal(node,document.getElementById('modal-root'));
 }
