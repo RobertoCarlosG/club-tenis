@@ -1,21 +1,43 @@
 import React from 'react';
-import { BrowserRouter, Switch, Redirect } from 'react-router-dom'
-import { Route } from 'react-router'
-import Login from './paginas/login'
-import ADM from './paginas/administrador/index'
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
+import { Route } from 'react-router';
+import { ThemeProvider } from '@material-ui/styles';
+import Login from './paginas/login';
+import Administrador from './paginas/administrador/torneos/dashboard';
+import DetallesTorneo from './paginas/administrador/torneos/detalles_torneo';
+import { AuthProvider } from './contexto/auth';
+import { TorneoContextProvider } from './contexto/ctx_torneo';
+import GuardRoute from './modulos/guardRoute';
+import MainAdm from './layout/mainAdm';
+import theme from './modulos/theme';
 
 function App() {
   return (
-    <BrowserRouter>
-    <div id='root'>
-      <Switch>
-        <Route  path="/login" component={Login} />
-        <Route path="/administrador" component={ADM} /> 
-        <Redirect from="/" to ="/administrador" />
-      </Switch>
-      </div>
-      <div id='modal-root'></div>
-    </BrowserRouter>
+    <ThemeProvider theme={ theme }>
+      <BrowserRouter>
+          <AuthProvider>
+            <TorneoContextProvider>
+              <Switch>
+                <GuardRoute 
+                  path="/administrador" 
+                  component={ Administrador } 
+                  exact
+                  layout={ MainAdm }
+                />           
+                <GuardRoute 
+                  exact
+                  strict
+                  path="/administrador/detalles/:idTorneo" 
+                  component = { DetallesTorneo }
+                  layout={ MainAdm }
+                />
+                <Route exact path="/login" component={ Login } />
+                <Redirect from="/" to ="/login" />
+              </Switch>
+            </TorneoContextProvider>
+          </AuthProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

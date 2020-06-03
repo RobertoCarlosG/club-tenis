@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Button from '@material-ui/core/Button';
@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+
 import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -19,9 +20,8 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
-import { db } from '../../../servicios/firebase/index'
 
-import { TorneoContext } from '../../../contexto/ctx_torneo';
+import { updateTorneo } from '../../../servicios/firebase';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,38 +45,36 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(1, 1, 1),
 	},
 	buttonCan: {
-		padding: theme.spacing(1, 0, 1),
+		margin: theme.spacing(1, 0, 1),
 		textTransform: 'none',
 		backgroundColor: '#FFF',
 		borderRadius: '5px',
 		color: '#000',
-    borderColor: '#192D3E',
-    fontSize: 18,
+		borderColor: '#192D3E',
 		'&:hover': {
 			backgroundColor: '#C4C4C4',
 		}
 	},
 	buttonAccept:{
-		padding: theme.spacing(1, 0, 1),
+		margin: theme.spacing(1, 0, 1),
 		textTransform: 'none',
 		backgroundColor: '#192D3E',
-    borderRadius: '5px',
-    fontSize: 18,
+		borderRadius: '5px',
 		'&:hover': {
 			backgroundColor: '#3A4750',
 		}
 	},
 }));
 
-export default function CrearTorneo(props) {
+export default function ModificarTorneo(props) {
 	const classes = useStyles();
-	const theme = useTheme();
+  const theme = useTheme();
+  
+  const { idTorneo, ...rest } = props;
 
 	const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { createTorneo } = useContext(TorneoContext);
-
-  const [open] = useState(true);
+	const [open] = useState(true);
 	const [nombre, setNombre] = useState('');
 	const [categoria, setCategoria] = useState('');
 	const [tipo, setTipo] = useState('');
@@ -84,32 +82,40 @@ export default function CrearTorneo(props) {
 	const [dateFin, setDateFin] = useState(new Date());
 	const [dateInicio, setDateInicio] = useState(new Date());
 
+	useState(() => {
+		if ( props.nombre != '' ) setNombre(props.nombre);
+		if ( props.categoria != '' ) setCategoria(props.categoria);
+		if ( props.tipo != '' ) setTipo(props.tipo);
+		if ( props.participantes != '' ) setParticipantes(props.participantes);
+		if ( props.dateFin != null ) setDateFin(props.dateFin);
+		if ( props.dateInicio != null ) setDateInicio(props.dateInicio);
+	});
+
 	const handleDateChangeFin = (date) => {
 		setDateFin(date);
 	};
 	
 	const handleDateChangeInicio = (date) => {
 		setDateInicio(date);
-  };
+	};
 
 	const handleClose = () => {
-    props.onClose();
+		props.onClose();
 	};
 
 	const handleSubmit = async () => {
 		const data = {
-      nombre: nombre, 
-      categoria: categoria, 
-      tipo: tipo, 
-      participantes: participantes, 
-      fecha_inicio: dateInicio, 
-      fecha_fin: dateFin 
+			nombre: nombre, 
+			categoria: categoria, 
+			tipo: tipo, 
+			participantes: participantes, 
+			fecha_inicio: dateInicio, 
+			fecha_fin: dateFin 
 		};
-		console.log(data);
-		await createTorneo(data);
-
-    props.onClose();
+    await updateTorneo(idTorneo, data);
+    
     props.onOpen();
+    props.onClose();
 	}
 
 	const node = (
@@ -121,14 +127,14 @@ export default function CrearTorneo(props) {
 				aria-labelledby="responsive-dialog-title"
 			>
 				<DialogTitle id="form-dialog-title">
-					<Typography component="h1" variant="h6" align="center">
-							Crear Torneo
+					<Typography component="h1" variant="h5" align="center">
+							Modificar Torneo
 					</Typography>
 				</DialogTitle>
 				<Divider variant='middle'/>
 				<DialogContent>
 					<ValidatorForm onSubmit={ handleSubmit }>
-						<Grid container spacing={3} justify="center" alignItems="center">
+						<Grid container spacing={2} justify="center" alignItems="center">
 							<Grid item xs={12} sm={10} justify="center">
 								<TextValidator
 									variant="outlined"
@@ -181,7 +187,7 @@ export default function CrearTorneo(props) {
 							</Grid>
 							<br />
 							<MuiPickersUtilsProvider className={classes.formControl} utils={DateFnsUtils}>
-								<Grid item xs={6} sm={5} justify="center">
+								<Grid item md={5} justify="center">
 									<KeyboardDatePicker
 										disableToolbar
 										fullWidth
@@ -199,7 +205,7 @@ export default function CrearTorneo(props) {
 										}}
 									/>
 								</Grid>
-								<Grid item xs={6} sm={5} justify="center">
+								<Grid item md={5} justify="center">
 									<KeyboardDatePicker
 										disableToolbar
 										fullWidth
