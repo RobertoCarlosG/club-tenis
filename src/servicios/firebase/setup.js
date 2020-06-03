@@ -26,6 +26,7 @@ export const auth = firebase.auth();
 export const db   = firebase.firestore();
 
 
+//this one is not working
 export const startUi = (elementId) => {
     const ui = new firebase.auth.EmailAuthProvider(auth);
     ui.start(elementId, uiConfig);
