@@ -37,7 +37,7 @@ export class TorneoContextProvider extends React.Component {
 
     createTorneo = async (data) => {
         try {
-            await createTorneo({data});
+            await createTorneo(data);
         } catch (error) {
             console.log(error);
         }

@@ -7,6 +7,10 @@ import Container from '@material-ui/core/Container';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import { Paper, Input } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import { useHistory } from 'react-router-dom';
+
 import img from '../../../imagenes/Logo5.svg';
 import { TorneoContext } from '../../../contexto/ctx_torneo';
 
@@ -24,6 +28,10 @@ import { db } from '../../../servicios/firebase/index';
 
 function cambiarFondo() {
   document.body.style = 'background: F7F7F7;';
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -82,23 +90,35 @@ const useStyles = makeStyles((theme) => ({
 
 const Administrador = () => {
   const classes = useStyles();
+  const history = useHistory();
   cambiarFondo();
   
   // State
   const [open, setOpen] = React.useState(false);
+  const [openAlert, setOpenAlert] = React.useState(false);
   const [busqueda, setBusqueda] = React.useState('');
 
   // Context
   const { torneos } = useContext(TorneoContext);
   console.log(torneos);
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
+
   const handleCreartorneo = () => {
     setOpen(true);
   }
 
-  const handleDetails=(id)=>{
+  const handleDetails = (id) => {
     console.log(id);
-    // Ir a detalles.
+
+    const ruta = 'administrador/detalles/'+id;
+    history.push(ruta);
   }
 
   const handleBusqueda = (event) => {
@@ -147,18 +167,19 @@ const Administrador = () => {
         </Grid>
         <br />
         <Grid container spacing={4}>
-          { torneos.map(torneo => {
+          { resultados.map(torneo => {
             return(
               <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
-                <Card className={classes.card}
+                <Card 
+                  className={classes.card}
                   onClick={ () => handleDetails(torneo.id) }
                 >
                   <CardActionArea> 
-                  <CardMedia
-                    className={classes.cardMedia}
-                    image={img}
-                    title="Image title"
-                  />
+                    <CardMedia
+                      className={classes.cardMedia}
+                      image={img}
+                      title="Image title"
+                    />
                   
                     <CardContent className={ classes.cardContent} >
                       <center>
@@ -178,9 +199,16 @@ const Administrador = () => {
         </Grid>
       </Container>
 
+      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Torneo registrado.
+        </Alert>
+      </Snackbar>
+
       {open &&
         <CreaTorneo 
           onClose={()=> setOpen(false)}
+          onOpen={ () => setOpenAlert(true) }
         />
       }
     </div>

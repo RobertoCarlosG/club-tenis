@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/styles';
-import { useMediaQuery } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -9,96 +8,25 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import SwipeableViews from 'react-swipeable-views';
-import { IconButton } from '@material-ui/core';
-import EventIcon from '@material-ui/icons/Event';
-import ModificarTorneo from './modificar_torneo';
+import Container from '@material-ui/core/Container';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useHistory } from 'react-router-dom';
+
+import {
+  useParams
+} from 'react-router-dom';
+
+import Detalles from './componentes/detalles';
+import PartidosTorneo from './componentes/partidos';
+import Participantes from './componentes/participantes';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    paddingTop: 56,
-    height: '100%',
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64
-    }
-  },
-  tabs: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
     padding: theme.spacing(2),
   },
-  cardGrid: {
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(8),
-  },
-  btn: {
-		margin: theme.spacing(1, 0, 1),
-		textTransform: 'none',
-    borderRadius: '5px',
-    fontSize: 18,
-		'&:hover': {
-			backgroundColor: '#3A4750',
-		}
-  },
-  btn_2: {
-		margin: theme.spacing(1, 0, 1),
-		textTransform: 'none',
-    borderRadius: '5px',
-    fontSize: 18,
-  },
-  card_1: {
-    background: theme.palette.primary.main,
-  },
-  card_title: {
-    color: theme.palette.common.white,
-    fontSize: 48,
-    fontWeight: 600,
-  },
-  media: {
-    maxWidth: '100%',
-    height: 175,
-    objectFit: 'contain',
-  },
-  content: {
-    height: 175,
-    padding: 0,
-    "&:last-child": {
-      paddingBottom: 0
-    },
-  },
-  content_2: {
-    height: 45,
-    paddingTop: theme.spacing(1),
-    "&:last-child": {
-      paddingBottom: 0
-    },
-  },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(4),
-    right: theme.spacing(4),
-  },
-  title: {
-    color: theme.palette.common.black,
-    fontSize: 24,
-  },
-  title_2: {
-    color: '#4CAF50',
-    fontSize: 74,
-    fontWeight: 500,
-  },
-  title_3: {
-    color: '#F44336',
-    fontSize: 74,
-    fontWeight: 500,
-  },
-  borde: {
-    border: 1,
-    borderColor: '#000',
-  },
-  nameContainer: {
-    display: 'flex',
-    alignItems: 'center'
+  icon: {
+    color: theme.palette.text.primary
   },
 }));
 
@@ -114,7 +42,11 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3} border={1} borderColor="#979797" borderRadius="0px 0px 5px 5px" bgcolor="#FFF">
+        <Box p={3} border={1} 
+          borderColor="#979797" 
+          borderRadius="0px 0px 5px 5px" 
+          bgcolor="#FFF"
+        >
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -128,27 +60,9 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function a11yProps(index) {
-  return {
-    id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
-  };
-}
-
-function createData(jugador1, jugador2, estado, fecha, hora) {
-  return { jugador1, jugador2, estado, fecha, hora };
-}
-
 function createD(nombre, edad, federacion, puntos, rank, av) {
   return { nombre, edad, federacion, puntos, rank, av };
 }
-
-const rows = [
-  createData('Roger Federer', 'Rafael Nadal', 'Sin iniciar', '06/15/2020', '12:00'),
-  createData('Pete Sampras', 'Novak Djokovic', 'Sin iniciar', '06/15/2020', '12:00'),
-  createData('Rod Laver', 'Bjorn Borg', 'Sin iniciar', '06/15/2020', '12:00'),
-  createData('Ivan Lendl', 'Jimmy Connors', 'Sin iniciar', '06/15/2020', '12:00'),
-];
 
 const jug = [
   createD('Roger Federer', '34 años', 'ATP', '6630', '1', 'RF'),
@@ -161,18 +75,14 @@ const jug = [
   createD('Jimmy Connors', '25 años', 'ATP', '5987', '8', 'JC'),
 ];
 
-const Detalles = props => {
-  const { children } = props;
-  const [Xstate, setXstate] = React.useState(null);
-
+const DetallesTorneo = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
-    defaultMatches: true
-  });
+  const history = useHistory();
 
-  const [openSidebar, setOpenSidebar] = useState(false);
-  const [value, setValue] = React.useState(0);
+  const { idTorneo } = useParams();
+
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -182,72 +92,55 @@ const Detalles = props => {
     setValue(index);
   };
 
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true);
+  const handleBack = () => {
+    history.goBack();
   };
-
-  const handleSidebarClose = () => {
-    setOpenSidebar(false);
-  };
-
-  const handleModificarTorneo = () => {
-    setXstate(1);
-  };
-
-  const editIcon = (
-    <IconButton onClick={ console.log("Edit") }>
-      <EventIcon />
-    </IconButton>
-  );
-
-  const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
   return (
     <div className={ classes.root }>
-      <Grid container spacing={2} justify="center" alignItems="center">
-        <Grid item xs={12} sm={10} justify="center">
-          <Paper square elevation={3}>
-            <Tabs
-              value={value}
-              indicatorColor="secondary"
-              textColor="primary"
-              onChange={handleChange}
-              aria-label="tabs"
+      <Container maxWidth="lg">
+        <IconButton 
+          aria-label="volver" 
+          size="medium"
+          onClick={ handleBack }
+        >
+          <ArrowBackIcon className={classes.icon} />
+        </IconButton>
+        <Grid container spacing={2} justify="center" alignItems="center">
+          <Grid item xs={12} sm={12} justify="center">
+            <Paper square elevation={3}>
+              <Tabs
+                value={value}
+                indicatorColor="secondary"
+                textColor="primary"
+                onChange={handleChange}
+                aria-label="tabs"
+              >
+                <Tab label="Detalles"/>
+                <Tab label="Partidos" />
+                <Tab label="Participantes" />
+              </Tabs>
+            </Paper>
+            <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={value}
+              onChangeIndex={handleChangeIndex}
             >
-              <Tab label="Detalles"/>
-              <Tab label="Partidos" />
-              <Tab label="Participantes" />
-            </Tabs>
-          </Paper>
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <TabPanel value={value} index={0} dir={theme.direction}>
-              Hola
-            </TabPanel>
-            <TabPanel value={value} index={1} dir={theme.direction}>
-              Hola
-            </TabPanel>
-            <TabPanel value={value} index={2} dir={theme.direction}>
-              Hola
-            </TabPanel>
-          </SwipeableViews>
+              <TabPanel value={value} index={0} dir={theme.direction}>
+                <Detalles idTorneo={idTorneo} />
+              </TabPanel>
+              <TabPanel value={value} index={1} dir={theme.direction}>
+                <PartidosTorneo idTorneo={idTorneo} />
+              </TabPanel>
+              <TabPanel value={value} index={2} dir={theme.direction}>
+                <Participantes idTorneo={idTorneo} />
+              </TabPanel>
+            </SwipeableViews>
+          </Grid>
         </Grid>
-      </Grid>
-      {Xstate &&
-        <ModificarTorneo 
-          onClose={()=> setXstate(null)}
-
-        />
-      }
+      </Container>
     </div>
   );
 };
 
-Detalles.propTypes = {
-  children: PropTypes.node
-};
-
-export default Detalles;
+export default DetallesTorneo;

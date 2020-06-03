@@ -67,6 +67,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
+  title:{
+    fontSize: 36,
+    textTransform: 'none',
+  },
 }));
 
 const Login = ({ history }) => {
@@ -119,7 +123,7 @@ const Login = ({ history }) => {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h4">
+        <Typography className={classes.title}>
           Iniciar sesión
         </Typography>
         <br />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Button from '@material-ui/core/Button';
@@ -20,7 +20,7 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 
-import { createTorneo } from '../../../servicios/firebase';
+import { TorneoContext } from '../../../contexto/ctx_torneo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,6 +73,8 @@ export default function CrearTorneo(props) {
 
 	const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { createTorneo } = useContext(TorneoContext);
+
   const [open] = useState(true);
 	const [nombre, setNombre] = useState('');
 	const [categoria, setCategoria] = useState('');
@@ -87,25 +89,26 @@ export default function CrearTorneo(props) {
 	
 	const handleDateChangeInicio = (date) => {
 		setDateInicio(date);
-	};
+  };
 
 	const handleClose = () => {
-		props.onClose();
+    props.onClose();
 	};
 
 	const handleSubmit = async () => {
-    const data = {
+		const data = {
       nombre: nombre, 
       categoria: categoria, 
       tipo: tipo, 
       participantes: participantes, 
       fecha_inicio: dateInicio, 
       fecha_fin: dateFin 
-    };
-    console.log(data);
-    await createTorneo(data);
-    
+		};
+		console.log(data);
+		await createTorneo(data);
+
     props.onClose();
+    props.onOpen();
 	}
 
 	const node = (

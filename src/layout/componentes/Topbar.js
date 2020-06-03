@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import { AppBar, Toolbar, Badge, Hidden, IconButton } from '@material-ui/core';
+import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Typography from '@material-ui/core/Typography';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import logo from '../../imagenes/Logo8.svg';
+
+import { auth } from '../../servicios/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +37,21 @@ const Topbar = props => {
   const { className, onSidebarOpen, tipoUsuario, nombre, ...rest } = props;
   const classes = useStyles();
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    auth.signOut();
+  };
+
   return (
     <AppBar
       { ...rest }
@@ -56,13 +76,22 @@ const Topbar = props => {
           { tipoUsuario }
         </Typography>
         <Hidden mdDown>
-          <IconButton>
+          <IconButton onClick={handleClick}>
             <AccountCircleIcon />
             &nbsp;
             <Typography variant="h6" noWrap className={ classes.txt }>
               { nombre }
             </Typography>
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
         </Hidden>
       </Toolbar>
     </AppBar>

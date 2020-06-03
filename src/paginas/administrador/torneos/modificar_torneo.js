@@ -21,6 +21,8 @@ import {
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
 
+import { updateTorneo } from '../../../servicios/firebase';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -66,7 +68,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function ModificarTorneo(props) {
 	const classes = useStyles();
-	const theme = useTheme();
+  const theme = useTheme();
+  
+  const { idTorneo, ...rest } = props;
 
 	const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -99,9 +103,19 @@ export default function ModificarTorneo(props) {
 		props.onClose();
 	};
 
-	const handleSubmit = () => {
-		// your submit logic
-		props.onClose();
+	const handleSubmit = async () => {
+		const data = {
+			nombre: nombre, 
+			categoria: categoria, 
+			tipo: tipo, 
+			participantes: participantes, 
+			fecha_inicio: dateInicio, 
+			fecha_fin: dateFin 
+		};
+    await updateTorneo(idTorneo, data);
+    
+    props.onOpen();
+    props.onClose();
 	}
 
 	const node = (

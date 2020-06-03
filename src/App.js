@@ -4,7 +4,7 @@ import { Route } from 'react-router';
 import { ThemeProvider } from '@material-ui/styles';
 import Login from './paginas/login';
 import Administrador from './paginas/administrador/torneos/dashboard';
-import Detalles from './paginas/administrador/torneos/detalles_torneo';
+import DetallesTorneo from './paginas/administrador/torneos/detalles_torneo';
 import { AuthProvider } from './contexto/auth';
 import { TorneoContextProvider } from './contexto/ctx_torneo';
 import GuardRoute from './modulos/guardRoute';
@@ -23,9 +23,15 @@ function App() {
                   component={ Administrador } 
                   exact
                   layout={ MainAdm }
-                  /> 
-                <Route exact path="/login" component={ Login } />          
-                <Route path="/detalles" component={ Detalles } />
+                />           
+                <GuardRoute 
+                  exact
+                  strict
+                  path="/administrador/detalles/:idTorneo" 
+                  component = { DetallesTorneo }
+                  layout={ MainAdm }
+                />
+                <Route exact path="/login" component={ Login } />
                 <Redirect from="/" to ="/login" />
               </Switch>
             </TorneoContextProvider>
