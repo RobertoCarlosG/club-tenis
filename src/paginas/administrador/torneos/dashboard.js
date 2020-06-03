@@ -186,10 +186,39 @@ const Administrador = () => {
           }
           fetchData()
       }, []);  
-      
+
+      let JugadoresRef = db.collection('jugadores');
+      let [playes, setPlayers] = React.useState([{}]);
+{ /*
+      function consulta(){
+        JugadoresRef.get()
+        .then(snapshot => {
+          if (snapshot.empty) {
+            console.log('No matching documents.');
+            
+          }
+          else{
+              snapshot.forEach(doc => {
+              setPlayers(snapshot.docs.map(doc => doc.data()));
+              console.log(doc.id);
+               
+                return;
+            });
+            console.log('SALIMOS')
+            
+          }
+          
+        })
+        .catch(err => {
+          console.log('Error getting documents', err);
+        });
+      }
+*/
+}   
       return (
         <div className={classes.root}>
           <CssBaseline />
+  
           <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
             <Toolbar className={classes.toolbar}>
               <IconButton
