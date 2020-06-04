@@ -100,7 +100,7 @@ const Login = ({ history }) => {
       try {
         await auth
           .signInWithEmailAndPassword(email.value, password.value);
-        history.push('/administrador');
+        history.push('/capturista');
         console.log('Logeado');
       } catch(error) {
         console.log(error);
@@ -112,7 +112,7 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if(currentUser) {
-    return <Redirect to="/administrador" />
+    return <Redirect to="/capturista" />
   }
 
   return (

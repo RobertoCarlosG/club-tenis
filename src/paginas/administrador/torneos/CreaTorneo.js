@@ -19,7 +19,6 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from '@material-ui/pickers';
-import { db } from '../../../servicios/firebase/index'
 
 import { TorneoContext } from '../../../contexto/ctx_torneo';
 
