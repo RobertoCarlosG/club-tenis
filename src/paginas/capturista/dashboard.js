@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, createRef } from 'react'
+import Dropzone from 'react-dropzone';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -11,17 +12,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useHistory } from 'react-router-dom';
 
-import img from '../../imagenes/Logo5.svg';
 import { TorneoContext } from '../../contexto/ctx_torneo';
 
-//CARTAS
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-
-//CREAR TORNEO
-import CreaTorneo from '../administrador/torneos/CreaTorneo';
 
 function cambiarFondo() {
   document.body.style = 'background: F7F7F7;';
@@ -53,6 +45,15 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '5px',
     fontSize: 18,
   },
+  btn_procesar:{
+    padding: theme.spacing(1),
+		textTransform: 'none',
+    borderRadius: '5px',
+    fontSize: 18,
+    backgroundColor: "#192D3E",
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    color: 'white',
+  },
   paper: {
     borderRadius: '5px',
     alignItems: 'center',
@@ -82,10 +83,31 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: 24,
   },
+  con_dropzone:{
+    backgroundColor:'#c4c4c4',
+    padding: '15px',
+    border: '1px black',
+    display: 'flex',
+    alignItems: 'center',
+    height:'400px',
+
+  },
+  dropzone: {
+    width : '100%',
+    height : '100%',
+    border : '1px solid black',
+  },
+  contenedor:{
+    padding: '15px',
+    border: '1px solid #000',
+    borderRadius: '15px',
+    borderColor: '#c4c4c4',
+    boxShadow: '8px 8px 8px rgba(0, 0, 0, 0.25)',
+  },
 }));
 
 
-const Administrador = () => {
+const Capturista = () => {
   const classes = useStyles();
   const history = useHistory();
   cambiarFondo();
@@ -129,36 +151,95 @@ const Administrador = () => {
         torneo.nombre.toLowerCase().includes(busqueda.toLowerCase())
       );  
 
+ const dropzoneRef = createRef();
+ const openDialog = () => {
+        // Note that the ref is set async,
+        // so it might be null at some point 
+        if (dropzoneRef.current) {
+          dropzoneRef.current.open()
+        }
+      };
+
   return (
     <div className={classes.root}>
-            Bienvenido {}
-      <Container maxWidth="lg">
+     <Container maxWidth="lg">     
+           <center> 
+             <Typography 
+              className={classes.title} 
+              > 
+              US Open - Femenil Simple 
+              </Typography>
+           </center>
+    <div className={classes.contenedor}>
+      
+        
       <Grid container direction="row" justify="center" >
         {/* torneo.nombre */} {/*- torneo.categoria  torneo.modalidad  */}
-        <Typography className={classes.title}> US Open - Femenil Simple </Typography>
-      </Grid>
         
-        <Grid container spacing={3} direction="row" justify="space-between">
-          
-          <Grid item xs={5} sm={3}>
-            <Button
-                    fullWidth
-                    className={ classes.btn_agregar }
-                    variant="contained"
-                    
-                    color="secondary"
-                  >
+      </Grid>
 
-                  <AddIcon className={ classes.pIcon }/>
-                    Cargar Archivo
-                  </Button>
-            </Grid>
-          </Grid>
+          <Dropzone className={classes.dropzone} ref={dropzoneRef} noClick noKeyboard>
+            {({getRootProps, getInputProps, acceptedFiles}) => {
+              return (
+              <div>
+                <Grid container direction="row" justify="space-between" >
+                  <Grid item xs={6} sm={5}>
+                    <div {...getRootProps({className: 'dropzone'})}>
+                      <input  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" {...getInputProps()} />
+                      <p className={classes.con_dropzone}>Arrastra tu archivo aqui o seleccionalo</p>
+                    </div>
+                  </Grid>
+                  <Grid item xs={6} sm={5}>
+                    <aside>
+                      <center>
+                      <Typography className={classes.title}> Archivo </Typography>
+                      </center>
+                      <ul>
+                        {acceptedFiles.map(file => (
+                          <li key={file.path}>
+                            {file.path} - {file.size} bytes
+                          </li>
+                        ))}
+                      </ul>
+                    </aside>
+                  </Grid>
+                  <Grid item xs={6} sm={5} >
+                    <Button
+                            fullWidth
+                            className={ classes.btn_agregar }
+                            variant="contained"
+                            onClick={openDialog}
+                            color="secondary"
+                          >
+
+                          <AddIcon className={ classes.pIcon }/>
+                            Cargar Archivo
+                          </Button>
+                  </Grid>
+                  <Grid item xs={6} sm={5} >
+                    <Button
+                            fullWidth
+                            className={ classes.btn_procesar }
+                            variant="contained"
+                            onClick={openDialog}
+                           
+                          >
+
+                          
+                            Procesar 
+                          </Button>
+                  </Grid>
+                </Grid>
+              </div>
+              );
+            }}
+          </Dropzone> 
+        
+        </div>
         </Container>
-            
     </div>
   );
   
 }
 
-export default Administrador;
+export default Capturista;
