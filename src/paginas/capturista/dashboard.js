@@ -178,14 +178,14 @@ const Capturista = () => {
         
       </Grid>
 
-          <Dropzone className={classes.dropzone} ref={dropzoneRef} noClick noKeyboard>
+          <Dropzone className={classes.dropzone} ref={dropzoneRef} noClick noKeyboard accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" >
             {({getRootProps, getInputProps, acceptedFiles}) => {
               return (
               <div>
                 <Grid container direction="row" justify="space-between" >
                   <Grid item xs={6} sm={5}>
                     <div {...getRootProps({className: 'dropzone'})}>
-                      <input  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" {...getInputProps()} />
+                      <input   {...getInputProps()} />
                       <p className={classes.con_dropzone}>Arrastra tu archivo aqui o seleccionalo</p>
                     </div>
                   </Grid>
