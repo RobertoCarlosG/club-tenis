@@ -111,10 +111,14 @@ export default function ModificarTorneo(props) {
 			participantes: participantes, 
 			fecha_inicio: dateInicio, 
 			fecha_fin: dateFin 
-		};
-    await updateTorneo(idTorneo, data);
-    
-    props.onOpen();
+    };
+    try {
+      await updateTorneo(idTorneo, data);
+      props.onOpen();
+    } catch(err) {
+      console.log(err);
+    }
+
     props.onClose();
 	}
 

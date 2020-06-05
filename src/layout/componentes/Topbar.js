@@ -57,6 +57,7 @@ const Topbar = props => {
       { ...rest }
       className={ clsx(classes.root, className) }
       position="fixed"
+      alignItems="flex-end"
     >
       <Toolbar>
         <Hidden lgUp>
@@ -72,27 +73,28 @@ const Topbar = props => {
           src={ logo }
           height={ 54 }
         />
-        <Typography variant="h6" noWrap className={ classes.title } align="center">
-          { tipoUsuario }
-        </Typography>
+        <div className={classes.flexGrow} />
         <Hidden mdDown>
-          <IconButton onClick={handleClick}>
-            <AccountCircleIcon />
-            &nbsp;
-            <Typography variant="h6" noWrap className={ classes.txt }>
-              { nombre }
-            </Typography>
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </Menu>
+          <Typography variant="h6" noWrap className={ classes.title }>
+            { tipoUsuario }
+          </Typography>
         </Hidden>
+        <IconButton onClick={handleClick}>
+          <AccountCircleIcon />
+          &nbsp;
+          <Typography variant="h6" noWrap className={ classes.txt }>
+            { nombre }
+          </Typography>
+        </IconButton>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext } from 'react';
 import { withRouter, Redirect } from "react-router";
 import { AuthContext } from '../../contexto/auth'
-import { auth } from '../../servicios/firebase/setup'
+import { auth, db } from '../../servicios/firebase/setup'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -19,9 +19,15 @@ import Alert from '@material-ui/lab/Alert';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import Recuperar from './recuperarClave';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 function cambiarFondo() {
   document.body.style = 'background: linear-gradient(180deg, rgba(3, 155, 229, 0.15) 0%, rgba(255, 255, 255, 0) 100%), #192D3E;';
+}
+
+function Notify(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -73,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ history }) => {
+const Autenticarse = ({ history }) => {
   const classes = useStyles();
   cambiarFondo();
 
@@ -84,6 +90,15 @@ const Login = ({ history }) => {
   const [values, setValues] = React.useState({
     showPassword: false,
   });
+  const [openAlert, setOpenAlert] = React.useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -98,10 +113,27 @@ const Login = ({ history }) => {
       event.preventDefault();
       const { email, password } = event.target.elements;
       try {
-        await auth
-          .signInWithEmailAndPassword(email.value, password.value);
-        history.push('/administrador');
-        console.log('Logeado');
+        await auth.signInWithEmailAndPassword(email.value, password.value);
+        var user = auth.currentUser;
+        var uid, tipo;
+        if (user != null) {
+          uid = user.uid;
+          
+          const usuarios = db.collection('usuarios').doc(uid);
+          usuarios.get().then(doc => {
+            if (doc.exists) {
+              tipo = doc.data().tipo;
+              
+              if(tipo == 'administrador') {
+                history.push('/administrador');
+                console.log('Logeado: ', tipo);
+              }
+
+            }
+          }).catch(err => {
+            console.log('Error: ', err);
+          });
+        }
       } catch(error) {
         console.log(error);
         setOpen(true);
@@ -220,14 +252,21 @@ const Login = ({ history }) => {
         </Button>
         <br /><br />
       </Paper>
+      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
+        <Notify onClose={handleClose} severity="success">
+          Solicitud realizada.
+        </Notify>
+      </Snackbar>
+
       <br />
       {dialog && 
         <Recuperar 
-          onClose={() => setDialog(false) }
+          onClose={() => setDialog(false)}
+          onOpen={() => setOpenAlert(true)}
         />
       }
     </Container>
   );
 };
 
-export default withRouter(Login);
+export default withRouter(Autenticarse);

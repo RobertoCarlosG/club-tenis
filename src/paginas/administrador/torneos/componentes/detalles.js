@@ -127,18 +127,22 @@ const Detalles = props => {
   const [estado, setEstado] = useState('');
 
   useEffect(() => {
-    const torneoRef = db.collection('torneos').doc(idTorneo);
+    try {
+      const torneoRef = db.collection('torneos').doc(idTorneo);
 
-    torneoRef.onSnapshot( snapshot => {
-      console.log(snapshot.data());
-      setNombre(snapshot.data().nombre);
-      setCategoria(snapshot.data().categoria);
-      setTipo(snapshot.data().tipo);
-      setParticipantes(snapshot.data().participantes);
-      setDateInicio(snapshot.data().fecha_inicio.toDate());
-      setDateFin(snapshot.data().fecha_fin.toDate());
-      setEstado(snapshot.data().estado);
-    });
+      torneoRef.onSnapshot( snapshot => {
+        console.log(snapshot.data());
+        setNombre(snapshot.data().nombre);
+        setCategoria(snapshot.data().categoria);
+        setTipo(snapshot.data().tipo);
+        setParticipantes(snapshot.data().participantes);
+        setDateInicio(snapshot.data().fecha_inicio.toDate());
+        setDateFin(snapshot.data().fecha_fin.toDate());
+        setEstado(snapshot.data().estado);
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
   }, []);
 
@@ -320,7 +324,7 @@ const Detalles = props => {
 
       <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Torneo midificado.
+          Torneo modificado.
         </Alert>
       </Snackbar>
 

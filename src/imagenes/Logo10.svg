@@ -1,0 +1,68 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1200" height="600" fill="#192D3E"/>
+<g filter="url(#filter0_d)">
+<rect x="350" y="125" width="500" height="400" rx="5" fill="#FAFAFA"/>
+<rect x="350.5" y="125.5" width="499" height="399" rx="4.5" stroke="#979797"/>
+</g>
+<g filter="url(#filter1_d)">
+<path d="M350 130C350 127.239 352.239 125 355 125H845C847.761 125 850 127.239 850 130V225H350V130Z" fill="#E74C3C"/>
+</g>
+<g filter="url(#filter2_dd)">
+<rect x="400" y="75" width="50" height="100" fill="#C4C4C4"/>
+</g>
+<rect x="400" y="250" width="100" height="100" fill="#C4C4C4"/>
+<rect x="550" y="250" width="100" height="100" fill="#C4C4C4"/>
+<rect x="550" y="400" width="100" height="100" fill="#C4C4C4"/>
+<rect x="700" y="250" width="100" height="100" fill="#C4C4C4"/>
+<rect x="700" y="400" width="100" height="100" fill="#C4C4C4"/>
+<rect x="400" y="400" width="100" height="100" fill="#C4C4C4"/>
+<g filter="url(#filter3_d)">
+<rect x="750" y="75" width="50" height="100" fill="#C4C4C4"/>
+</g>
+<circle cx="607" cy="374" r="100" fill="#8CC63E"/>
+<circle cx="617.5" cy="366.5" r="87.5" fill="#AED477"/>
+<path d="M509.405 324.11C509.405 324.11 579.867 289.51 611.863 353.675C643.859 417.841 710.482 394.681 714.321 383.24" stroke="#FAFAFA" stroke-width="15"/>
+<defs>
+<filter id="filter0_d" x="346" y="125" width="508" height="408" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<filter id="filter1_d" x="346" y="125" width="508" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<filter id="filter2_dd" x="396" y="75" width="58" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow" result="shape"/>
+</filter>
+<filter id="filter3_d" x="746" y="75" width="58" height="108" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset dy="4"/>
+<feGaussianBlur stdDeviation="2"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+</defs>
+</svg>

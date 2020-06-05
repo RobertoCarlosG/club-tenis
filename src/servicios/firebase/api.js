@@ -67,15 +67,21 @@ export async function realizarSorteo(id) {
         if(tipo == 'Simple') {
             const data = {
                 torneo: id,
-                fecha: null,
+                estado: 'Por jugarse',
+                fecha: '',
                 ganador: 0,
-                hora: null,
+                hora: '',
                 local: arr[0].nombre+' '+arr[0].apellido,
+                lugar: '',
                 nombre: 'Partido '+(i+1),
                 puntos_local: 0,
                 puntos_visita: 0,
                 ronda: ronda,
-                visita: arr[arr.length-1].nombre+' '+arr[arr.length-1].apellido
+                setsMax: 3,
+                visita: arr[arr.length-1].nombre+' '+arr[arr.length-1].apellido,
+                set1: [0, 0],
+                set2: [0, 0],
+                set3: [0, 0],
             };
             arr.pop();
             arr.shift();
@@ -84,13 +90,13 @@ export async function realizarSorteo(id) {
             .collection('partidos')
             .doc()
             .set(data)
-
-            await db
-            .collection('torneos')
-            .doc(id)
-            .update({ sorteo: true })
         }
     }
+
+    await db
+        .collection('torneos')
+        .doc(id)
+        .update({ sorteo: true })
 }
 
 //PAARTIDOS

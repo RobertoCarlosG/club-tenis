@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: '#3A4750',
     }
   },
+  title: {
+    fontSize: 30,
+    textTransform: 'none',
+    fontWeight: 500,
+  },
 }));
 
 export default function Recuperar(props) {
@@ -39,6 +44,7 @@ export default function Recuperar(props) {
 
   const handleReset = () => {
     props.onClose();
+    props.onOpen();
   };
 
   const node = (
@@ -51,8 +57,8 @@ export default function Recuperar(props) {
       >
         <br />
         <DialogTitle id="responsive-dialog-title">
-          <Typography component="h1" variant="h4" align="center">
-            {"Recuperar contraseña"}
+          <Typography className={classes.title} align="center">
+            Recuperar contraseña
           </Typography>
         </DialogTitle>
         <DialogContent>

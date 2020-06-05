@@ -102,13 +102,20 @@ export default function CrearTorneo(props) {
       tipo: tipo, 
       participantes: participantes, 
       fecha_inicio: dateInicio, 
-      fecha_fin: dateFin 
+      fecha_fin: dateFin,
+      estado: "Activo",
+      inscritos: false,
+      sorteo: false
 		};
-		console.log(data);
-		await createTorneo(data);
+    console.log(data);
+    try {
+      await createTorneo(data);
+      props.onOpen();
+    } catch (err) {
+      console.log(err);
+    }
 
     props.onClose();
-    props.onOpen();
 	}
 
 	const node = (

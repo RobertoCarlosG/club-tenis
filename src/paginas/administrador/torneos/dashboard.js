@@ -27,7 +27,7 @@ import CreaTorneo from './CreaTorneo';
 import { db } from '../../../servicios/firebase/index';
 
 function cambiarFondo() {
-  document.body.style = 'background: F7F7F7;';
+  document.body.style = 'background: #F7F7F7;';
 }
 
 function Alert(props) {
@@ -117,7 +117,7 @@ const Administrador = () => {
   const handleDetails = (id) => {
     console.log(id);
 
-    const ruta = 'administrador/detalles/'+id;
+    const ruta = '/administrador/detalles/'+id;
     history.push(ruta);
   }
 

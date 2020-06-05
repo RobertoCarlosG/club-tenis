@@ -44,6 +44,28 @@ export function watchMatches (callback) {
     return unsub;
 }
 
+export function watchMatchesToday (idTorneo, fecha, callback) {
+    const unsub = db
+    .collection('partidos')
+    .where("torneo", "==", idTorneo)
+    .where("fecha", "==", fecha)
+    .onSnapshot((snapshot) => {
+        const info = [];
+
+        snapshot.forEach((information) => {
+            const data = information.data();
+
+            info.push({
+                ...data,
+                id: information.id,
+            });
+        });
+
+        callback(info);
+    });
+    return unsub;
+}
+
 
 //TORNEOS
 //TORNEOS

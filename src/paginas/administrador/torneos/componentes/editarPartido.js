@@ -86,15 +86,23 @@ export default function EditarPartido(props) {
     props.onClose();
 	};
 
+  const curday = function(sp){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //As January is 0.
+    var yyyy = today.getFullYear();
+    
+    if(dd<10) dd='0'+dd;
+    if(mm<10) mm='0'+mm;
+    return (dd+sp+mm+sp+yyyy);
+  };
+
 	const handleSubmit = async () => {
     const hours = hora.getHours().toString().padStart(2, "0");
     const minutes = hora.getMinutes().toString().padStart(2, "0")
     const textHora = hours+':'+minutes+' hrs.';
-
-    const day = fecha.getDate().toString().padStart(2, "0");
-    const month = fecha.getMonth().toString().padStart(2, "0");
-    const year = fecha.getFullYear().toString(); 
-    const textFecha = day+'/'+month+'/'+year;
+ 
+    const textFecha = curday('/');
 
 		const data = { 
       fecha: textFecha,
