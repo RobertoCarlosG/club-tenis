@@ -55,6 +55,9 @@ const Topbar = props => {
     setAnchorEl(null);
     auth.signOut();
   };
+  const handlePerfil = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar
@@ -100,7 +103,8 @@ const Topbar = props => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Cerrar sesión</MenuItem>
+          <MenuItem onClick={handlePerfil}>Perfil</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
