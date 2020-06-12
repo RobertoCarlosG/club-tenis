@@ -4,6 +4,7 @@ import { Route } from 'react-router';
 import { ThemeProvider } from '@material-ui/styles';
 import Autenticarse from './paginas/login';
 import Administrador from './paginas/administrador/torneos/dashboard';
+import Usuarios from './paginas/administrador/usuarios/usuarios';
 import DetallesTorneo from './paginas/administrador/torneos/detalles_torneo';
 import Monitor from './paginas/monitor/monitor';
 import DetallesPartido from './paginas/monitor/componentes/detallesPartido';
@@ -31,6 +32,13 @@ function App() {
                   strict
                   path="/administrador/detalles/:idTorneo" 
                   component = { DetallesTorneo }
+                  layout={ MainAdm }
+                />
+                <GuardRoute 
+                  exact
+                  strict
+                  path="/usuarios" 
+                  component = { Usuarios }
                   layout={ MainAdm }
                 />
                 <GuardRoute 

@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import * as admin from 'firebase-admin';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDjtZFQ2ApHAYdkuVwsX18M6-yyJFyxmLI",
@@ -21,13 +22,21 @@ const uiConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+// admin.initializeApp({
+//     credential: admin.credential.applicationDefault(),
+//     databaseURL: "https://lobo-teni.firebaseio.com",
+// });
+
+// export const auth = admin.auth();
+// export const db = admin.firestore();
+// export const storage = admin.storage();
 
 export const auth = firebase.auth();
 export const db   = firebase.firestore();
-
+export const storage = firebase.storage();
 
 //this one is not working
-export const startUi = (elementId) => {
-    const ui = new firebase.auth.EmailAuthProvider(auth);
-    ui.start(elementId, uiConfig);
-};
+// export const startUi = (elementId) => {
+//     const ui = new firebase.auth.EmailAuthProvider(auth);
+//     ui.start(elementId, uiConfig);
+// };

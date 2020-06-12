@@ -135,17 +135,23 @@ const Administrador = () => {
   return (
     <div className={classes.root}>
       <Container maxWidth="lg">
-        <Grid container spacing={3} direction="row" justify="space-between">
-          <Grid item xs={6} sm={4}>
+        <Grid 
+          container
+          spacing={2}
+          direction="row" 
+          justify="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={6} sm={3}>
             <Button
               fullWidth
               className={ classes.btn_agregar }
               variant="contained"
               onClick={ handleCreartorneo }
               color="secondary"
-            > 
-              <AddIcon className={ classes.pIcon }/>
-              Crear Torneo
+              startIcon={ <AddIcon /> }
+            >
+              Crear torneo
             </Button>
           </Grid>
           <Grid item xs={6}>

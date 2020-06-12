@@ -37,6 +37,7 @@ const MainMonitor = props => {
 
   const [openSidebar, setOpenSidebar] = useState(false);
   const [nombre, setNombre] = useState('');
+  const [img, setImg] = useState('');
   const { currentUser } = useContext(AuthContext);
 
   const handleSidebarOpen = () => {
@@ -49,10 +50,13 @@ const MainMonitor = props => {
 
   useEffect(() => {
       try {
-          const usuariosRef = db.collection('usuarios').doc(currentUser.id);
+          const usuariosRef = db.collection('usuarios').doc(currentUser.email);
 
           usuariosRef.onSnapshot( snapshot => {
               setNombre(snapshot.data().nombre+' '+snapshot.data().apellido);
+              if(snapshot.data().imagen) {
+                setImg(snapshot.data().imagen);
+              }
           });
 
       } catch (err) {
@@ -72,6 +76,7 @@ const MainMonitor = props => {
       <Topbar 
         onSidebarOpen={ handleSidebarOpen }
         tipoUsuario="Monitor"
+        img={ img }
         nombre={ nombre }
       />
       <SidebarMonitor

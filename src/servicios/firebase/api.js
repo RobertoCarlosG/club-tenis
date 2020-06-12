@@ -24,7 +24,8 @@ export async function updateTorneo(id, data) {
         .update(data);
 }
 
-
+// Realizar sorteo
+// Pendiente: torneos dobles.
 export async function realizarSorteo(id) {
     // Obtener torneo y jugadores del torneo.
     const torneo = db.collection('torneos').doc(id).get();
@@ -123,6 +124,30 @@ export async function deletePartido(id) {
 export async function updatePartido(id, data) {
     return await db
         .collection('partidos')
+        .doc(id)
+        .update(data);
+}
+
+// USUARIOS
+
+// Importante: antes se debe crear un usuario auth.
+export async function createUsuario (id, data) {
+    return await db
+        .collection('usuarios')
+        .doc(id)
+        .set(data);
+}
+
+export async function deleteUsuario (id) {
+    return await db
+        .collection('usuarios')
+        .doc(id)
+        .delete();
+}
+
+export async function updateUsuario (id, data) {
+    return await db
+        .collection('usuarios')
         .doc(id)
         .update(data);
 }

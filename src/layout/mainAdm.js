@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/styles';
@@ -7,6 +7,7 @@ import Container from '@material-ui/core/Container';
 
 import {AuthContext} from '../contexto/auth';
 import { SidebarAdm, Topbar, Footer } from './componentes';
+import { db } from '../servicios/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +36,8 @@ const MainAdm = props => {
   });
 
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [nombre, setNombre] = useState('');
+  const [img, setImg] = useState('');
   const { currentUser } = useContext(AuthContext);
 
   const handleSidebarOpen = () => {
@@ -44,6 +47,21 @@ const MainAdm = props => {
   const handleSidebarClose = () => {
     setOpenSidebar(false);
   };
+
+  useEffect(() => {
+    try {
+        const usuariosRef = db.collection('usuarios').doc(currentUser.email);
+
+        usuariosRef.onSnapshot( snapshot => {
+            setNombre(snapshot.data().nombre+' '+snapshot.data().apellido);
+            if(snapshot.data().imagen) {
+              setImg(snapshot.data().imagen);
+            }
+        });
+    } catch (err) {
+        console.log('Error:', err);
+    }
+});
 
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
 
@@ -57,7 +75,8 @@ const MainAdm = props => {
       <Topbar 
         onSidebarOpen={ handleSidebarOpen }
         tipoUsuario="Administrador"
-        nombre={currentUser.email}
+        img={ img }
+        nombre={ nombre }
       />
       <SidebarAdm
         onClose={ handleSidebarClose }

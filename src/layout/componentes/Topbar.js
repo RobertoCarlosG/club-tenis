@@ -6,7 +6,7 @@ import { AppBar, Toolbar, Hidden, IconButton } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import logo from '../../imagenes/Logo8.svg';
@@ -30,11 +30,15 @@ const useStyles = makeStyles(theme => ({
   },
   signOutButton: {
     marginLeft: theme.spacing(1)
-  }
+  },
+  colorA: {
+    color: '#FFF',
+    backgroundColor: theme.palette.primary.main,
+  },
 }));
 
 const Topbar = props => {
-  const { className, onSidebarOpen, tipoUsuario, nombre, ...rest } = props;
+  const { className, onSidebarOpen, tipoUsuario, nombre, img, ...rest } = props;
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -80,7 +84,10 @@ const Topbar = props => {
           </Typography>
         </Hidden>
         <IconButton onClick={handleClick}>
-          <AccountCircleIcon />
+          { img != '' 
+            ? <Avatar src={img}/>
+            : <Avatar className={classes.colorA}>{nombre[0]}</Avatar>
+          }
           &nbsp;
           <Typography variant="h6" noWrap className={ classes.txt }>
             { nombre }

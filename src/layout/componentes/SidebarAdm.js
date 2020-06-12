@@ -44,7 +44,7 @@ const Sidebar = props => {
     },
     {
       title: 'Usuarios',
-      href: '/detalles',
+      href: '/usuarios',
       icon: <PeopleIcon style={{ color: '#FFF' ,}} />
     }
   ];

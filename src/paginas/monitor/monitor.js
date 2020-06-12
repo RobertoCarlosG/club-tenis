@@ -65,8 +65,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const arr = [1, 2, 3];
-
 function Monitor () {
   const classes = useStyles();
   const history = useHistory();

@@ -1,7 +1,7 @@
-import React, { useCallback, useContext } from 'react';
-import { withRouter, Redirect } from "react-router";
+import React, { useCallback, useContext, useEffect } from 'react';
+import { withRouter, Redirect, useHistory } from "react-router";
 import { AuthContext } from '../../contexto/auth'
-import { auth, db } from '../../servicios/firebase/setup'
+import { auth, db, updateUsuario } from '../../servicios/firebase'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -79,12 +79,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Autenticarse = ({ history }) => {
+const Autenticarse = () => {
   const classes = useStyles();
+  const history = useHistory();
   cambiarFondo();
 
   const [open, setOpen] = React.useState(false);
   const [dialog, setDialog] = React.useState(false);
+  const [tipo, setTipo] = React.useState('Administrador');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [values, setValues] = React.useState({
@@ -108,44 +110,95 @@ const Autenticarse = ({ history }) => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
+  const redirect = (tipo) => {
+    if (tipo == 'Administrador') {
+      history.push('/administrador');
+      console.log('Logeado: ', tipo);
+    }
+    if (tipo == 'Monitor') {
+      history.push('/monitor');
+      console.log('Logeado: ', tipo);
+    }
+  }
+
+  const handleSignIn = async (event, tipo) => {
+    event.preventDefault();
+    const { email, password } = event.target.elements;
+    try {
+      await auth.signInWithEmailAndPassword(email.value, password.value);
+      redirect(tipo);
+    } catch(error) {
+      setOpen(true);
+      console.log("Error: ", error);
+    }
+  }
+
+  const handleSignUp = async (event, tipo) => {
+    event.preventDefault();
+    const { email, password } = event.target.elements;
+    const data = { "estado": "3" };
+    try {
+      updateUsuario(email.value, data);
+      await auth.createUserWithEmailAndPassword(email.value, password.value);
+      redirect(tipo);
+    } catch (error) {
+      console.log("Error: ", error);
+    }
+  }
+
   const handleLogin = useCallback(
     async event => {
       event.preventDefault();
       const { email, password } = event.target.elements;
-      try {
-        await auth.signInWithEmailAndPassword(email.value, password.value);
-        var user = auth.currentUser;
-        var uid, tipo;
-        if (user != null) {
-          uid = user.uid;
-          
-          const usuarios = db.collection('usuarios').doc(uid);
-          usuarios.get().then(doc => {
-            if (doc.exists) {
-              tipo = doc.data().tipo;
-              
-              if(tipo == 'administrador') {
-                history.push('/administrador');
-                console.log('Logeado: ', tipo);
-              }
-
-            }
-          }).catch(err => {
-            console.log('Error: ', err);
-          });
+      
+      var tipo = ''; var estado = ''; var clave = '';
+      console.log('Email:', email.value);
+      
+      // Buscar si el usuario está activo.
+      const usuarios = db.collection('usuarios').doc(email.value);
+      
+      usuarios.get().then(doc => {
+        // ¿Existe el usuario?
+        if (doc.exists) {
+          tipo = doc.data().tipo;
+          estado = doc.data().estado;
+          clave = doc.data().clave;
         }
-      } catch(error) {
-        console.log(error);
-        setOpen(true);
-      }
+
+        // Si el usuario está activo
+        if (estado == "3") 
+        {
+          handleSignIn(event, tipo);
+        }
+        // Si ingresa por primera vez
+        else if (estado == "2")
+        {
+          if (clave === password.value) 
+          {
+            handleSignUp(event, tipo);
+          } 
+          else 
+          {
+            setOpen(true);
+          }
+        }
+        // Si está inactivo.
+        else if (estado == "1") 
+        {
+          setOpen(true);
+        }
+      }).catch(err => {
+        console.log('Error: ', err);
+      });
+
     }, [history]
   );
 
-  const { currentUser } = useContext(AuthContext);
+  // const { currentUser } = useContext(AuthContext);
 
-  if(currentUser) {
+  /*if(currentUser) {
     return <Redirect to="/administrador" />
-  }
+  }*/
 
   return (
     <Container component="main" maxWidth="xs">
