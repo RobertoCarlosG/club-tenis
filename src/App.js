@@ -12,6 +12,9 @@ import GuardRoute from './modulos/guardRoute';
 import MainAdm from './layout/mainAdm';
 import MainCap from './layout/mainCap'
 import theme from './modulos/theme';
+import Principal from './paginas/principal/dashboard';
+import Detalles from './paginas/principal/verTorneo';
+import Ranking from './paginas/principal/ranking'
 
 function App() {
   return (
@@ -39,8 +42,11 @@ function App() {
                   exact
                   layout={ MainCap }
                 />
+                <Route exact path="/inicio" component={ Principal } />     
+                <Route exact path="/inicio/torneo/:idTorneo" component ={ Detalles } />  
+                <Route exact path="/inicio/ranking" component ={ Ranking } />         
                 <Route exact path="/login" component={ Login } />
-                <Redirect from="/" to ="/login" />
+                <Redirect from="/" to ="/inicio" />
               </Switch>
             </TorneoContextProvider>
           </AuthProvider>

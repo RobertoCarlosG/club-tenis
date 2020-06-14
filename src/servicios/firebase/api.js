@@ -120,3 +120,28 @@ export async function updatePartido(id, data) {
         .doc(id)
         .update(data);
 }
+
+//jogador
+export async function createJugador(data) {
+    return await db
+        .collection('jugadores')
+        .doc()
+        .set(data);
+}
+
+//Seleccionamios a cual borrar
+export async function deleteJugador(id) {
+    return await db
+        .collection('jugadores')
+        .doc(id)
+        .delete();
+}
+
+//Con SET sobre escribimos los datos
+export async function updateJugador(id, data) {
+    return await db
+        .collection('jugadores')
+        .doc(id)
+        .update(data);
+}
+

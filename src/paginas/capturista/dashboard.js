@@ -5,15 +5,21 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import { Paper, Input } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import List from '@material-ui/core/List';
+import AddIcon from '@material-ui/icons/Add';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import InboxIcon from '@material-ui/icons/Inbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useHistory } from 'react-router-dom';
-
+import * as XLSX from 'xlsx';
 import { TorneoContext } from '../../contexto/ctx_torneo';
-
+import GetDataFromExcelJusTInput from './data_fromE'
+import { useParams } from 'react-router-dom';
 
 function cambiarFondo() {
   document.body.style = 'background: F7F7F7;';
@@ -84,12 +90,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
   },
   con_dropzone:{
-    backgroundColor:'#c4c4c4',
+    backgroundColor:'#F3F3F3',
+    border: '1px',
+    alignContent:'center',
+    boxSizing: 'border-box',
     padding: '15px',
-    border: '1px black',
+    
     display: 'flex',
     alignItems: 'center',
-    height:'400px',
+    height:'250px',
 
   },
   dropzone: {
@@ -117,9 +126,18 @@ const Capturista = () => {
   const [openAlert, setOpenAlert] = React.useState(false);
   const [busqueda, setBusqueda] = React.useState('');
 
+  let hojas = [];
   // Context
   const { torneos } = useContext(TorneoContext);
   console.log(torneos);
+
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [datos, setDatos] = React.useState([]);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -133,16 +151,10 @@ const Capturista = () => {
     setOpen(true);
   }
 
-  const handleDetails = (id) => {
-    console.log(id);
-
+  const handleDetails = () => {
+    
     const ruta = 'capturista/historial/';
     history.push(ruta);
-  }
-
-  const handleBusqueda = (event) => {
-    var busq = event.target.value; 
-    setBusqueda(busq);
   }
 
   const resultados = !busqueda
@@ -150,60 +162,100 @@ const Capturista = () => {
     : torneos.filter(torneo =>
         torneo.nombre.toLowerCase().includes(busqueda.toLowerCase())
       );  
+      const dropzoneRef = createRef();
+      const openDialog = () => {
+             // Note that the ref is set async,
+             // so it might be null at some point 
+             if (dropzoneRef.current) {
+               dropzoneRef.current.open()
+             }
+           };
 
- const dropzoneRef = createRef();
- const openDialog = () => {
-        // Note that the ref is set async,
-        // so it might be null at some point 
-        if (dropzoneRef.current) {
-          dropzoneRef.current.open()
-        }
-      };
 
   return (
     <div className={classes.root}>
-     <Container maxWidth="lg">     
-           <center> 
+      <br /> 
+     <Container maxWidth="lg">    
+     
+    <Grid container direction="row" justify="space-between" spacing={3}>
+      <Grid item xs={3}>
+        
+
+          <List component="nav" aria-label="main mailbox folders" style={{borderRadius:'5px', border:'1 solid', boxShadow:'0px 4px 4px rgba(0, 0, 0, 0.25)'}}>
+          <ListItem
+            button
+            selected={selectedIndex === 0}
+            onClick={(event) => handleListItemClick(event, 0)}
+            style={{backgroundColor:'#192D3E',color:'#fff',borderTopLeftRadius:'5px',borderTopRightRadius:'5px',}} 
+          >
+          
+            
+            <center><ListItemText primary="Torneos" style={{fontSize: 24,}}/></center>
+          </ListItem>
+            
+          <Divider />
+          {resultados.map(torneo=>{
+            return(
+              <div>
+                 <ListItem
+                    button
+                    selected={selectedIndex === selectedIndex+1}
+                    onClick={(event) => handleListItemClick(event, selectedIndex)}
+                    value={torneo.id}
+                  >
+                    <ListItemText primary={torneo.nombre} />
+                  </ListItem>
+              </div>
+            );
+          }
+            )}
+          
+        
+        </List>
+      </Grid>
+      <Grid item xs={8}>
+      <center> 
              <Typography 
               className={classes.title} 
               > 
               US Open - Femenil Simple 
               </Typography>
-           </center>
-    <div className={classes.contenedor}>
-      
-        
-      <Grid container direction="row" justify="center" >
-        {/* torneo.nombre */} {/*- torneo.categoria  torneo.modalidad  */}
-        
-      </Grid>
+      </center> 
+      <br /> 
+        <div className={classes.contenedor}>
+          
+            
+          <Grid container direction="row" justify="center" >
+            {/* torneo.nombre */} {/*- torneo.categoria  torneo.modalidad  */}
+            
+          </Grid>
 
-          <Dropzone className={classes.dropzone} ref={dropzoneRef} noClick noKeyboard>
-            {({getRootProps, getInputProps, acceptedFiles}) => {
-              return (
-              <div>
-                <Grid container direction="row" justify="space-between" >
-                  <Grid item xs={6} sm={5}>
-                    <div {...getRootProps({className: 'dropzone'})}>
-                      <input  accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" {...getInputProps()} />
-                      <p className={classes.con_dropzone}>Arrastra tu archivo aqui o seleccionalo</p>
-                    </div>
-                  </Grid>
-                  <Grid item xs={6} sm={5}>
-                    <aside>
-                      <center>
-                      <Typography className={classes.title}> Archivo </Typography>
-                      </center>
-                      <ul>
-                        {acceptedFiles.map(file => (
-                          <li key={file.path}>
-                            {file.path} - {file.size} bytes
-                          </li>
-                        ))}
-                      </ul>
-                    </aside>
-                  </Grid>
-                  <Grid item xs={6} sm={5} >
+              <Dropzone className={classes.dropzone} ref={dropzoneRef} noClick noKeyboard>
+                {({getRootProps, getInputProps, acceptedFiles}) => {
+                  return (
+                  <div>
+                    <Grid container direction="row" justify="space-between" >
+                      <Grid item xs={6} sm={5}>
+                        <div {...getRootProps({className: 'dropzone'})}>
+                          <input  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" {...getInputProps()} />
+                          <p className={classes.con_dropzone}><center>Arrastra tu archivo aqui o seleccionalo</center></p>
+                        </div>
+                      </Grid>
+                      <Grid item xs={6} sm={5}>
+                        <aside>
+                          <center>
+                          <Typography className={classes.title}> Archivo </Typography>
+                          </center>
+                          <ul>
+                            {acceptedFiles.map(file => (
+                              <li key={file.path}>
+                                {file.path} - {file.size} bytes
+                              </li> 
+                            ))}
+                          </ul>
+                        </aside>
+                      </Grid>
+                      <Grid item xs={6} sm={5} >
                     <Button
                             fullWidth
                             className={ classes.btn_agregar }
@@ -215,6 +267,31 @@ const Capturista = () => {
                           <AddIcon className={ classes.pIcon }/>
                             Cargar Archivo
                           </Button>
+                          <input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                           onChange = { event => {
+                            let reader = new FileReader()
+                            reader.readAsArrayBuffer(event.target.files[0]);
+                            reader.onloadend = (e) => {
+                              var data = new Uint8Array(e.target.result);
+                              var workbook = XLSX.read(data, {type: 'array'});
+                              workbook.SheetNames.forEach(function(sheetName) {
+                                
+                                // Here is your object
+                                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                                datos.push({
+                                  data: XL_row_object,
+                                })
+                                hojas.push({
+                                  data: XL_row_object,
+                                  sheetName
+                                })
+                                console.log(XL_row_object);
+                              })
+                            }
+                            setDatos(JSON.stringify(datos));
+                            console.log(datos);
+                          }}
+                          />
                   </Grid>
                   <Grid item xs={6} sm={5} >
                     <Button
@@ -228,15 +305,19 @@ const Capturista = () => {
                           
                             Procesar 
                           </Button>
-                  </Grid>
-                </Grid>
-              </div>
-              );
-            }}
-          </Dropzone> 
-        
+                      </Grid>          
+                    </Grid>
+                  </div>
+                  );
+                }}
+              </Dropzone> 
+            
         </div>
+      </Grid>
+    </Grid>
+        
         </Container>
+     
     </div>
   );
   
