@@ -136,7 +136,7 @@ const Autenticarse = () => {
   const handleSignUp = async (event, tipo) => {
     event.preventDefault();
     const { email, password } = event.target.elements;
-    const data = { "estado": "3" };
+    const data = { "estado": 3 };
     try {
       updateUsuario(email.value, data);
       await auth.createUserWithEmailAndPassword(email.value, password.value);
@@ -166,12 +166,12 @@ const Autenticarse = () => {
         }
 
         // Si el usuario está activo
-        if (estado == "3") 
+        if (estado == 3) 
         {
           handleSignIn(event, tipo);
         }
         // Si ingresa por primera vez
-        else if (estado == "2")
+        else if (estado == 2)
         {
           if (clave === password.value) 
           {
@@ -183,7 +183,7 @@ const Autenticarse = () => {
           }
         }
         // Si está inactivo.
-        else if (estado == "1") 
+        else if (estado == 1) 
         {
           setOpen(true);
         }

@@ -1,15 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import {
+  Button, Dialog, DialogContent, DialogTitle, 
+  useMediaQuery, Grid, Typography, DialogActions,
+  Divider,
+} from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   KeyboardDatePicker,
@@ -17,12 +13,23 @@ import {
   KeyboardTimePicker
 } from '@material-ui/pickers';
 
-import { updatePartido } from '../../../../servicios/firebase';
+import { updatePartido, db } from '../../../../servicios/firebase';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+  },
+  dialogTitle: {
+    textTransform: 'none',
+    fontSize: 30,
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  text: {
+    textTransform: 'none',
+    fontSize: 18,
+    textAlign: 'center'
   },
 	textField: {
 		marginLeft: theme.spacing(1),
@@ -63,6 +70,26 @@ const useStyles = makeStyles((theme) => ({
 			backgroundColor: '#3A4750',
 		}
   },
+  ok: {
+    background: theme.palette.secondary.dark,
+    borderRadius: '4px',
+    color: '#FFF',
+    textTransform: 'none',
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: theme.palette.secondary.light,
+		}
+  },
+  cancel: {
+    color: '#646464',
+    borderRadius: '4px',
+    border: '1px solid #AFAFAF',
+    textTransform: 'none',
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: '#C4C4C4',
+		}
+  },
 }));
 
 export default function EditarPartido(props) {
@@ -74,17 +101,30 @@ export default function EditarPartido(props) {
   const { id } = props;
 
   const [open] = useState(true);
-  const [hora, setHora] = useState(new Date('2020-08-18T21:11:54'));
-  const [fecha, setFecha] = useState(new Date('2020-08-18T21:11:54'));
-  // const [hora, setHora] = useState('12:00');
+  const [hora, setHora] = useState(new Date());
+  const [fecha, setFecha] = useState(new Date());
+  const [confirm, setConfirm] = useState(false);
 
 	const handleDateChange = (date) => setFecha(date);
   
   const handleTimeChange = (date) => setHora(date);
 
+  const handleAccept = () => {
+    setConfirm(true);
+  }
+
 	const handleClose = () => {
     props.onClose();
-	};
+  };
+  
+  const handleOk = () => {
+    handleSubmit();
+    setConfirm(false);
+  };
+
+  const handleCancel = () => {
+    setConfirm(false);
+  };
 
   const curday = function(sp){
     var today = new Date();
@@ -104,12 +144,17 @@ export default function EditarPartido(props) {
  
     const textFecha = curday('/');
 
-		const data = { 
+		const data = {
       fecha: textFecha,
       hora: textHora
     };
-		console.log(id, data);
-		await updatePartido(id, data);
+    await updatePartido(id, data)
+    .then( () => {
+      props.onOpen();
+      console.log('Succes');
+    }).catch(err => {
+      console.log('Error', err.message);
+    });
 
     props.onClose();
 	}
@@ -122,16 +167,16 @@ export default function EditarPartido(props) {
 				aria-labelledby="responsive-dialog-title"
 			>
 				<DialogTitle id="form-dialog-title">
-					<Typography component="h1" variant="h6" align="center">
+					<Typography className={classes.dialogTitle} align="center">
 							Partido
 					</Typography>
 				</DialogTitle>
-				<Divider variant='middle'/>
+        <Divider />
 				<DialogContent>
           <br />
 						<Grid container spacing={3} justify="center" alignItems="center">
 							<MuiPickersUtilsProvider className={classes.formControl} utils={DateFnsUtils}>
-								<Grid item xs={12} sm={10} justify="center">
+								<Grid item xs={12} sm={8} justify="center">
 									<KeyboardDatePicker
 										disableToolbar
 										fullWidth
@@ -149,7 +194,7 @@ export default function EditarPartido(props) {
 										}}
 									/>
 								</Grid>
-                <Grid item xs={12} sm={10} justify="center">
+                <Grid item xs={12} sm={8} justify="center">
                   <KeyboardTimePicker
                     fullWidth
                     inputVariant="outlined"
@@ -165,26 +210,31 @@ export default function EditarPartido(props) {
                   />
                 </Grid>
 							</MuiPickersUtilsProvider>
-							<Grid item xs={6} sm={5} justify="center">  
+              <Grid item xs={12} justify="center">
+                <Typography align="center">
+                  {"\n"}
+                </Typography>
+              </Grid>
+							<Grid item xs={6} sm={4} justify="center">  
                 <Button
                   fullWidth
                   type="submit"
                   className={classes.buttonAccept}
                   variant="contained"
                   color="primary"
-                  onClick={handleSubmit}
+                  onClick={ handleAccept }
                 >
                   Guardar
                 </Button>
 							</Grid>
-							<Grid item xs={6} sm={5} justify="center">
+							<Grid item xs={6} sm={4} justify="center">
                 <Button
                   fullWidth
                   type="submit"
                   className={classes.buttonCan}
                   variant="contained"
                   color="primary"
-                  onClick={handleClose}
+                  onClick={ handleClose }
 								>
 									Cancelar
 								</Button>
@@ -194,6 +244,32 @@ export default function EditarPartido(props) {
 				</DialogContent>
         <br />
 			</Dialog>
+      { confirm &&
+        <Dialog
+          disableBackdropClick disableEscapeKeyDown
+          maxWidth="xs" aria-labelledby="confirmation-dialog-title"
+          open={ confirm }
+        >
+          <DialogTitle id="confirmation-dialog-title">
+            <Typography className={classes.dialogTitle}>
+              Confirmación
+            </Typography>
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography className={classes.text} justify="center">
+              ¿Está seguro de que desea guardar la información?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleOk} className={classes.ok}>
+              &nbsp;Aceptar&nbsp;
+            </Button>
+            <Button autoFocus onClick={handleCancel} className={classes.cancel}>
+              Cancelar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      }
 		</div>
 	);
 	return ReactDOM.createPortal(node,document.getElementById('modal-root'));

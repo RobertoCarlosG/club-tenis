@@ -11,6 +11,8 @@ import SwipeableViews from 'react-swipeable-views';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -75,6 +77,10 @@ const jug = [
   createD('Jimmy Connors', '25 años', 'ATP', '5987', '8', 'JC'),
 ];
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 const DetallesTorneo = (props) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -83,6 +89,15 @@ const DetallesTorneo = (props) => {
   const { idTorneo } = useParams();
 
   const [value, setValue] = useState(0);
+  const [openAlert, setOpenAlert] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenAlert(false);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -130,7 +145,10 @@ const DetallesTorneo = (props) => {
                 <Detalles idTorneo={idTorneo} />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
-                <PartidosTorneo idTorneo={idTorneo} />
+                <PartidosTorneo 
+                  idTorneo={idTorneo} 
+                  onOpen={() => setOpenAlert(true)}
+                  />
               </TabPanel>
               <TabPanel value={value} index={2} dir={theme.direction}>
                 <Participantes idTorneo={idTorneo} />
@@ -139,6 +157,16 @@ const DetallesTorneo = (props) => {
           </Grid>
         </Grid>
       </Container>
+      <Snackbar 
+        open={openAlert} 
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'}}
+      >
+        <Alert onClose={handleClose} severity="success">
+          Partido modificado.
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

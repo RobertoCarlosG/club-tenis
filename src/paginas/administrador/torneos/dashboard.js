@@ -173,35 +173,67 @@ const Administrador = () => {
         </Grid>
         <br />
         <Grid container spacing={4}>
-          { resultados.map(torneo => {
-            return(
-              <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
-                <Card 
-                  className={classes.card}
-                  onClick={ () => handleDetails(torneo.id) }
-                >
-                  <CardActionArea> 
-                    <CardMedia
-                      className={classes.cardMedia}
-                      image={img}
-                      title="Image title"
-                    />
-                  
-                    <CardContent className={ classes.cardContent} >
-                      <center>
-                        <Typography className={classes.title } gutterBottom>
-                          {torneo.nombre}
-                        </Typography>
-                        <Typography>
-                          {torneo.categoria} - {torneo.tipo}
-                        </Typography>
-                      </center>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+        { resultados.length > 0
+          ? (
+            resultados.map(torneo => {
+                return(
+                  <Grid item key={torneo.nombre} xs={12} sm={6} md={4}>
+                    <Card 
+                      className={classes.card}
+                      onClick={ () => handleDetails(torneo.id) }
+                    >
+                      <CardActionArea> 
+                        { torneo.imagen === ""
+                          ? (
+                            <CardMedia
+                              className={classes.cardMedia}
+                              image={img}
+                              title="Image title"
+                            />
+                          )
+                          : (
+                            <CardMedia
+                              className={classes.cardMedia}
+                              image={ torneo.imagen }
+                              title="Image title"
+                            />
+                          )
+                        }
+                      
+                        <CardContent className={ classes.cardContent} >
+                          <center>
+                            <Typography className={classes.title } gutterBottom>
+                              {torneo.nombre}
+                            </Typography>
+                            <Typography>
+                              {torneo.categoria} - {torneo.tipo}
+                            </Typography>
+                          </center>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                );
+            })
+          )
+          : (
+            <div>
+              <br /><br />
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+              >
+                <Grid item xs={12}>
+                  <Typography className={classes.title}>
+                    &nbsp;&nbsp;No hay torneos para mostrar.
+                  </Typography>
+                </Grid>
               </Grid>
-            );
-        })}
+            </div>
+          )
+        }
         </Grid>
       </Container>
 

@@ -4,7 +4,7 @@ import {
   Grid, Paper, Button, Table,
   TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 
-import { db, realizarSorteo } from '../../../../servicios/firebase/index';
+import { db, realizarSorteoSimple } from '../../../../servicios/firebase/index';
 import EditarPartido from './editarPartido';
 
 const useStyles = makeStyles(theme => ({
@@ -27,6 +27,12 @@ const useStyles = makeStyles(theme => ({
 		'&:hover': {
 			backgroundColor: '#3A4750',
 		}
+  },
+  dialogTitle: {
+    textTransform: 'none',
+    fontSize: 30,
+    fontWeight: 500,
+    textAlign: 'center'
   },
   title: {
     fontSize: 30,
@@ -52,6 +58,31 @@ const useStyles = makeStyles(theme => ({
   table: {
     minWidth: 600,
   },
+  text: {
+    textTransform: 'none',
+    fontSize: 18,
+    textAlign: 'center'
+  },
+  ok: {
+    background: theme.palette.secondary.dark,
+    borderRadius: '4px',
+    color: '#FFF',
+    textTransform: 'none',
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: theme.palette.secondary.light,
+		}
+  },
+  cancel: {
+    color: '#646464',
+    borderRadius: '4px',
+    border: '1px solid #AFAFAF',
+    textTransform: 'none',
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: '#C4C4C4',
+		}
+  },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -73,12 +104,13 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const PartidosTorneo = props => {
-  const { className, idTorneo, ...rest } = props;
+  const { className, idTorneo, onOpen, ...rest } = props;
   const classes = useStyles();
 
   const [id, setId] = useState('');
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+
   const [sorteo, setSorteo] = useState(false);
   const [inscritos, setInscritos] = useState(false);
   const [partidos, setPartidos] = useState([]);
@@ -90,28 +122,23 @@ const PartidosTorneo = props => {
       setInscritos(snapshot.data().inscritos);
     });
 
-    const partidosRef = db.collection('partidos').where("torneo", "==", idTorneo);
-    partidosRef.onSnapshot( snapshot => {
-      var datos = [];
-      snapshot.forEach(doc => {
-        const {
-          nombre, local, visita,
-          torneo, fecha, hora,
-          ganador, puntos_local,
-          puntos_visita, ronda
-        } = doc.data();
-        datos.push({
-          id: doc.id,
-          nombre, local, visita,
-          torneo, fecha, hora,
-          ganador, puntos_local,
-          puntos_visita, ronda
+    const partidosRef = db.collection('partidos')
+      .where("id_torneo", "==", idTorneo)
+      .orderBy("ronda");
+    partidosRef.onSnapshot((snapshot) => {
+      const info = [];
+      
+      snapshot.forEach((information) => {
+        const data = information.data();
+            
+        info.push({
+            ...data,
+            id: information.id,
         });
       });
-      console.log(datos);
-      setPartidos(datos);
-    });
 
+      setPartidos(info);
+    });
   }, []);
 
   const handleSorteo = () => {
@@ -123,12 +150,12 @@ const PartidosTorneo = props => {
   };
 
   const handleOk = () => {
-    realizarSorteo(idTorneo);
+    realizarSorteoSimple(idTorneo);
     setOpenDialog(false);
   };
 
   const handleEdit = (id) => {
-    console.log(id);
+    console.log('id:', id);
     setId(id);
     setOpen(true);
   };
@@ -174,34 +201,26 @@ const PartidosTorneo = props => {
           <br />
         </Grid>
         <Dialog
-          disableBackdropClick
-          disableEscapeKeyDown
-          maxWidth="xs"
-          aria-labelledby="confirmation-dialog-title"
-          open={openDialog}
+          disableBackdropClick disableEscapeKeyDown
+          maxWidth="xs" aria-labelledby="confirmation-dialog-title"
+          open={ openDialog }
         >
-          <DialogTitle>
-            <Typography className={classes.title_2} align="center">
-              Realizar sorteo
+          <DialogTitle id="confirmation-dialog-title">
+            <Typography className={classes.dialogTitle}>
+              Confirmación
             </Typography>
           </DialogTitle>
           <DialogContent dividers>
-            <br />
-            <Typography className={classes.title_2} align="justify">
+            <Typography className={classes.text} justify="center">
               ¿Está seguro de que desea realizar el sorteo?
             </Typography>
-            <br />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleOk} color="primary">
-              <Typography className={classes.titleAccept} align="center">
-                Aceptar
-              </Typography>
+            <Button onClick={handleOk} className={classes.ok}>
+              &nbsp;Aceptar&nbsp;
             </Button>
-            <Button autoFocus onClick={handleCancel} color="primary">
-              <Typography className={classes.titleDialog} align="center">
-                Cancelar
-              </Typography>
+            <Button autoFocus onClick={handleCancel} className={classes.cancel}>
+              Cancelar
             </Button>
           </DialogActions>
         </Dialog>
@@ -226,34 +245,37 @@ const PartidosTorneo = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {partidos.map((row) => (
-                  <StyledTableRow key={row.id}>
-                    <StyledTableCell component="th" scope="row" align="left">
-                      {row.local}
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.visita}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      { (row.fecha
-                        ? row.fecha
-                        : 'No asignada'
-                      ) }
-                    </StyledTableCell>
-                    <StyledTableCell align="left">
-                      { (row.hora
-                        ? row.hora
-                        : 'No asiganada'
-                      ) }
-                    </StyledTableCell>
-                    <StyledTableCell align="left">{row.ronda}</StyledTableCell>
-                    <StyledTableCell align="left">
-                      <IconButton 
-                        onClick={ () => handleEdit(row.id) }
-                      >
-                        <EventIcon />
-                      </IconButton>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+              { partidos.map(row => {
+                  return (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell component="th" scope="row" align="left">
+                        {row.local}
+                      </StyledTableCell>
+                      <StyledTableCell align="left">{row.visita}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        { (row.fecha
+                          ? row.fecha
+                          : 'No asignada'
+                        ) }
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        { (row.hora
+                          ? row.hora
+                          : 'No asiganada'
+                        ) }
+                      </StyledTableCell>
+                      <StyledTableCell align="left">{row.nombre_ronda}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        <IconButton 
+                          onClick={ () => handleEdit(row.id) }
+                        >
+                          <EventIcon />
+                        </IconButton>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  );
+                })
+              }
               </TableBody>
             </Table>
           </TableContainer>
@@ -263,6 +285,7 @@ const PartidosTorneo = props => {
       {open &&
         <EditarPartido 
           onClose={()=> setOpen(false)}
+          onOpen={ () => onOpen() }
           id={ id }
         />
       }

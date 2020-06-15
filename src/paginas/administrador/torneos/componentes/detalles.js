@@ -125,6 +125,8 @@ const Detalles = props => {
 	const [dateFin, setDateFin] = useState(new Date());
   const [dateInicio, setDateInicio] = useState(new Date());
   const [estado, setEstado] = useState('');
+  const [imagen, setImagen] = useState('');
+  const [inscritos, setInscritos] = useState(false);
 
   useEffect(() => {
     try {
@@ -139,6 +141,8 @@ const Detalles = props => {
         setDateInicio(snapshot.data().fecha_inicio.toDate());
         setDateFin(snapshot.data().fecha_fin.toDate());
         setEstado(snapshot.data().estado);
+        setImagen(snapshot.data().imagen);
+        setInscritos(snapshot.data().inscritos);
       });
     } catch (err) {
       console.log(err);
@@ -209,14 +213,22 @@ const Detalles = props => {
         <Grid item xs={12} sm={6} md={4}>
           <Card className={classes.card}>
             <CardContent className={classes.mediaContent}>
-                <CardMedia
-                  className={classes.media}
-                  image={ img }
-                  title="Cambiar imagen"
-                />
-                <Fab aria-label="Cambiar" className={classes.fab} color="secondary">
-                  <ImageIcon />
-                </Fab>
+              { imagen === ""
+                ? (
+                  <CardMedia
+                    className={classes.media}
+                    image={ img }
+                    title="Imagen"
+                  />
+                )
+                : (
+                  <CardMedia
+                    className={classes.media}
+                    image={ imagen }
+                    title="Imagen"
+                  />
+                )
+              }
               </CardContent>
           </Card>
         </Grid>
@@ -334,8 +346,7 @@ const Detalles = props => {
           onOpen={() => setOpenAlert(true)}
           idTorneo={ idTorneo }
           nombre={ nombre }
-          categoria={ categoria }
-          tipo={ tipo }
+          inscritos={ inscritos }
           participantes={ participantes }
           dateInicio={ dateInicio }
           dateFin={ dateFin }

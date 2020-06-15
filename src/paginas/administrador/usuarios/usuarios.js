@@ -98,7 +98,7 @@ const Usuarios = () => {
 
   useEffect(() => {
     const usuariosRef = db.collection('usuarios')
-    .where('estado', '>', '1');
+    .where('admin', '==', false).where('estado', '>', 1);
 
     usuariosRef.onSnapshot(sanpshot => {
       const info = [];

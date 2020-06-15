@@ -14,6 +14,8 @@ import GuardRoute from './modulos/guardRoute';
 import { MainAdm, MainMonitor } from './layout';
 import theme from './modulos/theme';
 
+import Bracket from './paginas/bracket/bracket';
+
 function App() {
   return (
     <ThemeProvider theme={ theme }>
@@ -54,6 +56,7 @@ function App() {
                   component = { DetallesPartido }
                   layout={ MainMonitor }
                 />
+                <Route path="/bracket" component={ Bracket } />
                 <Route exact path="/login" component={ Autenticarse } />
                 <Redirect from="/" to ="/login" />
               </Switch>

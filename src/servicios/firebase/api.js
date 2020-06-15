@@ -46,7 +46,7 @@ export async function realizarSorteo(id) {
     var arr = [];
     (await jugadores).docs.map(element => {
         arr.push(element.data());
-    });;
+    });
 
     // Ordenar por ranking.
     arr.sort( function (a, b) {
@@ -90,14 +90,14 @@ export async function realizarSorteo(id) {
             await db
             .collection('partidos')
             .doc()
-            .set(data)
+            .set(data);
         }
     }
 
     await db
         .collection('torneos')
         .doc(id)
-        .update({ sorteo: true })
+        .update({ sorteo: true });
 }
 
 //PAARTIDOS

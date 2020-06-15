@@ -123,7 +123,7 @@ const Participantes = props => {
                     <StyledTableCell component="th" scope="row" align="left">
                       <div className={classes.nameContainer}>
                         <Avatar  className={classes.color}>
-                          {row.nombre.charAt(0)}{row.apellido.charAt(0)}
+                          {row.nombre[0]}
                         </Avatar>&nbsp;&nbsp;&nbsp;
                         <Typography variant="body1">
                           {row.nombre}&nbsp;{row.apellido}

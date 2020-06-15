@@ -9,13 +9,12 @@ import {
   useMediaQuery, Grid, Typography, LinearProgress, 
   MenuItem, Stepper, InputAdornment, IconButton, 
   Step, StepLabel, CardMedia, DialogActions,
-  DialogContentText
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { db, storage, createUsuario} from '../../../servicios/firebase'; 
+import { storage, createUsuario} from '../../../servicios/firebase'; 
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -195,7 +194,8 @@ export default function RegistrarUsuaro (props) {
       sexo, tipo, 
       correo, clave,
       imagen: picture,
-      estado: "2"
+      estado: 2,
+      admin: false
 		};
     console.log(data);
     await createUsuario(correo, data)
@@ -290,7 +290,7 @@ export default function RegistrarUsuaro (props) {
                 <Grid item xs={12} sm={8}>
                   <TextValidator
                     variant="outlined" margin="normal"
-                    label="Contraseña" placeholder="Contraseña inicial"
+                    label="Contraseña inicial" placeholder="Contraseña inicial"
                     type={values.showPassword ? 'text' : 'password'}
                     value={ clave }
                     onChange={ e => setClave(e.target.value) }
@@ -361,7 +361,7 @@ export default function RegistrarUsuaro (props) {
                 <Grid item xs={12} sm={8}>
                   <TextValidator
                     variant="outlined" margin="normal"
-                    id="nombre" label="Nombre"
+                    id="nombre" label="Nombre (s)"
                     placeholder="p.e. José"
                     value={ nombre }
                     onChange={ e => setNombre(e.target.value) }
@@ -460,7 +460,7 @@ export default function RegistrarUsuaro (props) {
             </Grid>
             <Grid item xs={10} justify="center">
               <Typography className={classes.title}>
-                Foto de perfíl
+                Foto de perfíl (opcional)
               </Typography>
             </Grid>
             <Grid item xs={10} sm={6}>
