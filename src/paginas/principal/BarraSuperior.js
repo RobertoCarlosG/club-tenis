@@ -73,6 +73,11 @@ const Topbar = props => {
     history.push(ruta);
   };
 
+  const welcome = () => {
+    const ruta = '/';
+    history.push(ruta);
+  };
+
   return (
     <AppBar
       { ...rest }
@@ -84,6 +89,7 @@ const Topbar = props => {
           alt="Logo"
           src={ logo }
           height={ 54 }
+          onClick={ welcome }
         />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button color="inherit" onClick={ goindex } className={classes.btn_activo1}>Torneos</Button>
