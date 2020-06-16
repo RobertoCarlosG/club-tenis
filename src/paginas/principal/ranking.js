@@ -11,7 +11,6 @@ import {
 import Carousel from 'react-material-ui-carousel';
 import img from '../../imagenes/Logo5.svg';
 import Topbar from './BarraSuperior';
-import { JugadorContext } from '../../contexto/ctx_participantes';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -98,6 +97,27 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
       flexDirection: 'row',
       paddingTop: spacing(2),
     },
+    
+  },
+  card2: {
+    margin: 'auto',
+    borderRadius: '5px',
+    backgroundColor:'#E5E5E5',
+    transition: '0.3s',
+    position: 'relative',
+    marginLeft: 'auto',
+    overflow: 'initial',
+    background: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: "none",
+    paddingBottom: spacing(2),
+    [breakpoints.up('md')]: {
+      flexDirection: 'row',
+      paddingTop: spacing(2),
+    },
+    
   },
   media: {
     width: '88%',
@@ -116,6 +136,7 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
   box: {
     borderColor: 'rgba(0, 0, 0, 0.08)',
     height: '50%',
+    boxShadow:'0px 1px 0px rgba(0, 0, 0, 0.25)'
   },
   statLabel: {
     fontSize: 12,
@@ -130,6 +151,9 @@ const useStyles = makeStyles(({ breakpoints, spacing, palette }) => ({
     fontWeight: 'bold',
     marginBottom: 4,
     letterSpacing: '1px',
+  },
+  points:{
+    color: '#B01B1B',
   },
 }));
 
@@ -211,17 +235,17 @@ const Ranking = () => {
                     <Typography className={classes.title} align="center">
                       Ranking
                     </Typography>
-                    <Typography variant="h2" align="center">
+                    <Typography variant="h2" align="center" className={classes.points}>
                       1
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm container>
-                    <Card className={classes.card}>
+                    <Card className={classes.card2}>
                       <CardContent>
                         <Typography className={classes.title} align="center">
                           Puntos
                         </Typography>
-                        <Typography variant="h2" align="center">
+                        <Typography variant="h2" align="center" className={classes.points}>
                           {props.item.puntos}
                         </Typography>
                       </CardContent>
