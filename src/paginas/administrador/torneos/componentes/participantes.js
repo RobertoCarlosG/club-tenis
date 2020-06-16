@@ -5,8 +5,7 @@ import {
   TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton,
 } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-
+import Flag from 'react-world-flags';
 import { db } from '../../../../servicios/firebase/index';
 
 const useStyles = makeStyles(theme => ({
@@ -19,10 +18,6 @@ const useStyles = makeStyles(theme => ({
   },
   table: {
     minWidth: 600,
-  },
-  color: {
-    color: '#FFF',
-    backgroundColor: theme.palette.secondary.main,
   },
   nameContainer: {
     display: 'flex',
@@ -61,7 +56,8 @@ const Participantes = props => {
       setInscritos(snapshot.data().inscritos);
     });
 
-    const jugadoresRef = db.collection('jugadores').where("torneo", "==", idTorneo);
+    const jugadoresRef = db.collection('jugadores')
+      .where('torneo', '==', idTorneo).orderBy('ranking');
     jugadoresRef.onSnapshot( snapshot => {
       var datos = [];
       snapshot.forEach(doc => {
@@ -110,11 +106,11 @@ const Participantes = props => {
                   <StyledTableCell align="left">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Participante
                   </StyledTableCell>
-                  <StyledTableCell align="left">Edad</StyledTableCell>
-                  <StyledTableCell align="left">Nacionalidad</StyledTableCell>
-                  <StyledTableCell align="left">Federación</StyledTableCell>
-                  <StyledTableCell align="left">Puntos</StyledTableCell>
-                  <StyledTableCell align="left">Ranking</StyledTableCell>
+                  <StyledTableCell align="center">Edad</StyledTableCell>
+                  <StyledTableCell align="center">Nacionalidad</StyledTableCell>
+                  <StyledTableCell align="center">Federación</StyledTableCell>
+                  <StyledTableCell align="center">Puntos</StyledTableCell>
+                  <StyledTableCell align="center">Ranking</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -122,19 +118,19 @@ const Participantes = props => {
                   <StyledTableRow key={row.id}>
                     <StyledTableCell component="th" scope="row" align="left">
                       <div className={classes.nameContainer}>
-                        <Avatar  className={classes.color}>
-                          {row.nombre[0]}
-                        </Avatar>&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;
                         <Typography variant="body1">
                           {row.nombre}&nbsp;{row.apellido}
                         </Typography>
                       </div>
                     </StyledTableCell>
-                    <StyledTableCell align="left">{row.edad}</StyledTableCell>
-                    <StyledTableCell align="left">{row.nacionalidad}</StyledTableCell>
-                    <StyledTableCell align="left">{row.federacion}</StyledTableCell>
-                    <StyledTableCell align="left">{row.puntos}</StyledTableCell>
-                    <StyledTableCell align="left">{row.ranking}</StyledTableCell>
+                    <StyledTableCell align="center">{row.edad}{" años"}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Flag code={ row.nacionalidad} height="16"/>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">{row.federacion}</StyledTableCell>
+                    <StyledTableCell align="center">{row.puntos}</StyledTableCell>
+                    <StyledTableCell align="center">{row.ranking}</StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>

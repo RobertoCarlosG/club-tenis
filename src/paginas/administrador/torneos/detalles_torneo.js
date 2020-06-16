@@ -62,21 +62,6 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
-function createD(nombre, edad, federacion, puntos, rank, av) {
-  return { nombre, edad, federacion, puntos, rank, av };
-}
-
-const jug = [
-  createD('Roger Federer', '34 años', 'ATP', '6630', '1', 'RF'),
-  createD('Rafael Nadal', '35 años', 'ATP', '6600', '2', 'RN'),
-  createD('Novak Djokovic', '32 años', 'ATP', '6500', '3', 'ND'),
-  createD('Pete Sampras', '29 años', 'ATP', '6400', '4', 'PS'),
-  createD('Rod Laver', '27 años', 'ATP', '6350', '5', 'RL'),
-  createD('Bjorn Borg', '28 años', 'ATP', '6210', '6', 'BB'),
-  createD('Ivan Lendl', '29 años', 'ATP', '6000', '7', 'IL'),
-  createD('Jimmy Connors', '25 años', 'ATP', '5987', '8', 'JC'),
-];
-
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -89,14 +74,37 @@ const DetallesTorneo = (props) => {
   const { idTorneo } = useParams();
 
   const [value, setValue] = useState(0);
-  const [openAlert, setOpenAlert] = useState(false);
+  const [alertModificar, setAlertModificar] = useState(false);
+  const [alertFinalizar, setAlertFinalizar] = useState(false);
+  const [alertSorteo, setAlertSorteo] = useState(false);
+  const [alertPartido, setAlertPartido] = useState(false);
 
-  const handleClose = (event, reason) => {
+  const closeModificar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
+    setAlertModificar(false);
+  };
 
-    setOpenAlert(false);
+  const closeFinalizar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertFinalizar(false);
+  };
+
+  const closeSorteo = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertSorteo(false);
+  };
+
+  const closePartido = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAlertPartido(false);
   };
 
   const handleChange = (event, newValue) => {
@@ -142,13 +150,18 @@ const DetallesTorneo = (props) => {
               onChangeIndex={handleChangeIndex}
             >
               <TabPanel value={value} index={0} dir={theme.direction}>
-                <Detalles idTorneo={idTorneo} />
+                <Detalles 
+                  idTorneo={ idTorneo }
+                  onModificar={ () => setAlertModificar(true) }
+                  onFinalizar={ () => setAlertFinalizar(true) }
+                />
               </TabPanel>
               <TabPanel value={value} index={1} dir={theme.direction}>
                 <PartidosTorneo 
-                  idTorneo={idTorneo} 
-                  onOpen={() => setOpenAlert(true)}
-                  />
+                  idTorneo={ idTorneo } 
+                  onPartido={ () => setAlertPartido(true) }
+                  onSorteo={ () => setAlertSorteo(true) }
+                />
               </TabPanel>
               <TabPanel value={value} index={2} dir={theme.direction}>
                 <Participantes idTorneo={idTorneo} />
@@ -158,12 +171,42 @@ const DetallesTorneo = (props) => {
         </Grid>
       </Container>
       <Snackbar 
-        open={openAlert} 
-        autoHideDuration={6000} 
-        onClose={handleClose}
-        anchorOrigin={ {vertical: 'top', horizontal: 'center'}}
+        open={ alertModificar } 
+        autoHideDuration={ 6000 } 
+        onClose={ closeModificar }
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'} }
       >
-        <Alert onClose={handleClose} severity="success">
+        <Alert onClose={ closeModificar } severity="success">
+          Torneo midificado.
+        </Alert>
+      </Snackbar>
+      <Snackbar 
+        open={ alertFinalizar } 
+        autoHideDuration={ 6000 } 
+        onClose={ closeFinalizar }
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'} }
+      >
+        <Alert onClose={ closeFinalizar } severity="success">
+          Torneo finalizado.
+        </Alert>
+      </Snackbar>
+      <Snackbar 
+        open={ alertSorteo } 
+        autoHideDuration={ 6000 } 
+        onClose={ closeSorteo }
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'} }
+      >
+        <Alert onClose={ closeSorteo } severity="success">
+          Sorteo realizado.
+        </Alert>
+      </Snackbar>
+      <Snackbar 
+        open={ alertPartido } 
+        autoHideDuration={ 6000 } 
+        onClose={ closePartido }
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'} }
+      >
+        <Alert onClose={ closePartido } severity="success">
           Partido modificado.
         </Alert>
       </Snackbar>

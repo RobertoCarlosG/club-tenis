@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import { Card, CardContent, Grid, Paper,
-  Typography, Button, CardMedia, Fab, Snackbar
+  Typography, Button, CardMedia
 } from '@material-ui/core';
-import ImageIcon from '@material-ui/icons/Image';
-import MuiAlert from '@material-ui/lab/Alert';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -55,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   content: {
-    height: 200,
+    height: 205,
     padding: 20,
     "&:last-child": {
       paddingBottom: 0
@@ -68,10 +66,11 @@ const useStyles = makeStyles(theme => ({
       paddingBottom: 0
     },
   },
-  fab: {
-    position: 'absolute',
-    bottom: theme.spacing(4),
-    right: theme.spacing(4),
+  dialogTitle: {
+    textTransform: 'none',
+    fontSize: 30,
+    fontWeight: 500,
+    textAlign: 'center'
   },
   title: {
     color: theme.palette.common.black,
@@ -88,23 +87,32 @@ const useStyles = makeStyles(theme => ({
     fontSize: 80,
     fontWeight: 500,
   },
-  titleAccept: {
-    color: '#4CAF50',
+  text: {
     textTransform: 'none',
-    fontSize: 24,
-    fontWeight: 500,
+    fontSize: 18,
+    textAlign: 'center'
   },
-  titleDialog: {
-    color: '#364756',
+  ok: {
+    background: theme.palette.secondary.dark,
+    borderRadius: '4px',
+    color: '#FFF',
     textTransform: 'none',
-    fontSize: 24,
-    fontWeight: 500,
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: theme.palette.secondary.light,
+		}
+  },
+  cancel: {
+    color: '#646464',
+    borderRadius: '4px',
+    border: '1px solid #AFAFAF',
+    textTransform: 'none',
+    fontSize: 18,
+    '&:hover': {
+			backgroundColor: '#C4C4C4',
+		}
   },
 }));
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Augosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -116,7 +124,6 @@ const Detalles = props => {
   
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
 
   const [nombre, setNombre] = useState('');
 	const [categoria, setCategoria] = useState('');
@@ -150,20 +157,13 @@ const Detalles = props => {
 
   }, []);
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenAlert(false);
-  };
-
   const handleCancel = () => {
     setOpenDialog(false);
   };
 
   const handleOk = () => {
     setOpenDialog(false);
+    props.onFinalizar();
   };
   
   const handleModificarTorneo = () => {
@@ -302,48 +302,34 @@ const Detalles = props => {
       </Grid>
 
       <Dialog
-        disableBackdropClick
-        disableEscapeKeyDown
-        maxWidth="xs"
-        aria-labelledby="confirmation-dialog-title"
-        open={openDialog}
+          disableBackdropClick disableEscapeKeyDown
+          maxWidth="xs" aria-labelledby="confirmation-dialog-title"
+          open={ openDialog }
       >
-        <DialogTitle>
-          <Typography className={classes.title} align="center">
-            Finalizar torneo
+        <DialogTitle id="confirmation-dialog-title">
+          <Typography className={classes.dialogTitle}>
+            Confirmación
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
-          <br />
-          <Typography className={classes.title} align="justify">
+          <Typography className={classes.text} justify="center">
             ¿Está seguro de que desea finalizar el torneo?
           </Typography>
-          <br />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleOk} color="primary">
-            <Typography className={classes.titleAccept} align="center">
-              Aceptar
-            </Typography>
+          <Button onClick={handleOk} className={classes.ok}>
+            &nbsp;Aceptar&nbsp;
           </Button>
-          <Button autoFocus onClick={handleCancel} color="primary">
-            <Typography className={classes.titleDialog} align="center">
-              Cancelar
-            </Typography>
+          <Button autoFocus onClick={handleCancel} className={classes.cancel}>
+            Cancelar
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success">
-          Torneo modificado.
-        </Alert>
-      </Snackbar>
-
       {open &&
         <ModificarTorneo 
           onClose={()=> setOpen(false)}
-          onOpen={() => setOpenAlert(true)}
+          onOpen={() => props.onModificar()}
           idTorneo={ idTorneo }
           nombre={ nombre }
           inscritos={ inscritos }

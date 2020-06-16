@@ -1,4 +1,5 @@
 import { db } from './';
+import { da } from 'date-fns/locale';
 
 // Torneo simple
 export async function realizarSorteoSimple(id) {
@@ -60,6 +61,55 @@ export async function realizarSorteoSimple(id) {
         return 0;
     });
 
+    // Generar los cruces.
+    const generar = function () {
+        var array_final = [];
+
+        var n_rondas = num_rondas;
+        var m = Math.pow(2, n_rondas);
+
+        var orden = devolver_orden(m);
+
+        var k = 0;
+        orden.forEach(element => {
+            if ( !isNaN(element) ) {
+                array_final.push({
+                    posicion: element,
+                });
+            }
+            k++;
+        });
+
+        return array_final;
+    };
+
+    // Generar los cruces.
+    const devolver_orden = function (n) {
+        var a = [];
+        a[1] = 0;
+        a[2] = n-1;
+        var v = n;
+
+        while (a.length < n) {
+            v = v/2;
+            var aux = a.length;
+            var x = aux;
+
+            for (var it = aux+1; it <= aux*2; it++) {
+                if (it%2 !== 0) {
+                    a[it] = a[x] - v+1;
+                } else {
+                    a[it] = a[x] + v-1;
+                }
+                x--;
+            }
+        }
+
+        return a;
+    };
+
+    var orden = generar();
+
     // Registrar rondas.
     for (var i=0; i<num_rondas; i++) {
         var indice = i+1;
@@ -79,6 +129,8 @@ export async function realizarSorteoSimple(id) {
             var num = j+1;
             var jugador1 = 'Por definirse';
             var jugador2 = 'Por definirse';
+            var bandera1 = '';
+            var bandera2 = '';
             var rank1 = '';
             var rank2 = '';
             var asociado = 0;
@@ -87,15 +139,25 @@ export async function realizarSorteoSimple(id) {
             var id_p2 = '';
 
             if (i === 0) {
-                jugador1 = arr[0].nombre+' '+arr[0].apellido;
-                jugador2 = arr[arr.length-1].nombre+' '+arr[arr.length-1].apellido;
-                rank1 = arr[0].ranking;
-                rank2 = arr[arr.length-1].ranking;
+                var idx = 0;
+                var idx_2 = 1;
+                if (j !== 0) {
+                    idx = j*2;
+                    idx_2 = (j*2)+1; 
+                }
+                var pos1 = orden[idx].posicion;
+                var pos2 = orden[idx_2].posicion;
+                console.log('pos1', pos1);
+                console.log('pos2', pos2);
+                jugador1 = arr[pos1].nombre+' '+arr[pos1].apellido;
+                jugador2 = arr[pos2].nombre+' '+arr[pos2].apellido;
+                rank1 = arr[pos1].ranking;
+                rank2 = arr[pos2].ranking;
+                bandera1 = arr[pos1].nacionalidad;
+                bandera2 = arr[pos2].nacionalidad;
                 var a = (num*2) - 1;
                 id_p1 = `${a}`;
                 id_p2 = `${num*2}`;
-                arr.pop();
-                arr.shift();
             }
 
             if (indice !== num_rondas) {
@@ -111,7 +173,7 @@ export async function realizarSorteoSimple(id) {
                 ronda: indice,
                 nombre_ronda: `Ronda ${indice} (${rondas[num_rondas-indice]})`,
                 numero: num,
-                duración: '',
+                duracion: '',
                 estado: 'Por jugarse',
                 fecha: '',
                 ganador: '',
@@ -128,14 +190,19 @@ export async function realizarSorteoSimple(id) {
                 id_p2,
                 setsMax: max_sets,
                 visita: jugador2,
-                puntos_local: '',
-                puntos_visita: '',
+                puntos_local: 0,
+                puntos_visita: 0,
                 ranking_1: rank1,
                 ranking_2: rank2,
                 partido_asociado: asociado,
                 local_asociado: puesto1,
                 ronda_asociada: asociada,
+                bandera1,
+                bandera2,
+                motivo_abandono: '',
             };
+
+            console.log(data);
 
             await db
             .collection('partidos')

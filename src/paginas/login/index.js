@@ -93,6 +93,7 @@ const Autenticarse = () => {
     showPassword: false,
   });
   const [openAlert, setOpenAlert] = React.useState(false);
+  const [openError, setOpenError] = React.useState(false);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -100,6 +101,14 @@ const Autenticarse = () => {
     }
 
     setOpenAlert(false);
+  };
+
+  const handleError = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenError(false);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -305,17 +314,32 @@ const Autenticarse = () => {
         </Button>
         <br /><br />
       </Paper>
-      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar 
+        open={ openAlert }
+        autoHideDuration={6000} 
+        onClose={handleClose}
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'}}
+      >
         <Notify onClose={handleClose} severity="success">
           Solicitud realizada.
         </Notify>
       </Snackbar>
-
+      <Snackbar 
+        open={ openError }
+        autoHideDuration={6000} 
+        onClose={ handleError }
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'}}
+      >
+        <Notify onClose={ handleError } severity="error">
+          Revise los datos ingresados.
+        </Notify>
+      </Snackbar>
       <br />
       {dialog && 
         <Recuperar 
           onClose={() => setDialog(false)}
           onOpen={() => setOpenAlert(true)}
+          onError={() => setOpenError(true)}
         />
       }
     </Container>

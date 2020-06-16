@@ -237,7 +237,11 @@ const Administrador = () => {
         </Grid>
       </Container>
 
-      <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar 
+        open={openAlert} 
+        autoHideDuration={6000} onClose={handleClose}
+        anchorOrigin={ {vertical: 'top', horizontal: 'center'} }
+      >
         <Alert onClose={handleClose} severity="success">
           Torneo registrado.
         </Alert>

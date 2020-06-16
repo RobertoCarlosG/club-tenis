@@ -10,6 +10,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
+import { auth } from '../../servicios/firebase';
+
 const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -42,9 +44,18 @@ export default function Recuperar(props) {
   const [email, setEmail] = React.useState('');
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleReset = () => {
+  const handleReset = (event) => {
+    const { email } = event.target.elements;
+
+    auth.sendPasswordResetEmail(email.value)
+    .then(() => {
+      props.onOpen();
+    }).catch(error => {
+      console.log(error);
+      props.onError();
+    });
+
     props.onClose();
-    props.onOpen();
   };
 
   const node = (

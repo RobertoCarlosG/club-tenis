@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import { 
-  Grid, Paper, Button, Table,
-  TableBody, TableCell, TableContainer,
-  TableHead, TableRow, IconButton,
-  Typography,
+  Grid, Paper, Button, Table, TableBody, TableCell, 
+  TableContainer, TableHead, TableRow, IconButton,
+  Typography, Dialog, DialogTitle, DialogActions, 
+  DialogContent
 } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import Dialog from '@material-ui/core/Dialog';
 
+import Flag from 'react-world-flags';
 import { db, realizarSorteoSimple } from '../../../../servicios/firebase/index';
 import EditarPartido from './editarPartido';
 
@@ -83,6 +80,10 @@ const useStyles = makeStyles(theme => ({
 			backgroundColor: '#C4C4C4',
 		}
   },
+  nameContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -104,7 +105,7 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 const PartidosTorneo = props => {
-  const { className, idTorneo, onOpen, ...rest } = props;
+  const { className, idTorneo, ...rest } = props;
   const classes = useStyles();
 
   const [id, setId] = useState('');
@@ -114,12 +115,18 @@ const PartidosTorneo = props => {
   const [sorteo, setSorteo] = useState(false);
   const [inscritos, setInscritos] = useState(false);
   const [partidos, setPartidos] = useState([]);
+  const [fechaInicio, setFechaInicio] = useState(new Date());
+  const [fechaFin, setFechaFin] = useState(new Date());
+  const [local, setLocal] = useState('');
+  const [visita, setVisita] = useState('');
 
   useEffect(() => {
     const torneoRef = db.collection('torneos').doc(idTorneo);
     torneoRef.onSnapshot( snapshot => {
       setSorteo(snapshot.data().sorteo);
       setInscritos(snapshot.data().inscritos);
+      setFechaInicio(snapshot.data().fecha_inicio.toDate());
+      setFechaFin(snapshot.data().fecha_fin.toDate());
     });
 
     const partidosRef = db.collection('partidos')
@@ -152,11 +159,13 @@ const PartidosTorneo = props => {
   const handleOk = () => {
     realizarSorteoSimple(idTorneo);
     setOpenDialog(false);
+    props.onSorteo();
   };
 
-  const handleEdit = (id) => {
-    console.log('id:', id);
+  const handleEdit = (id, local, visita) => {
     setId(id);
+    setLocal(local);
+    setVisita(visita);
     setOpen(true);
   };
 
@@ -249,9 +258,25 @@ const PartidosTorneo = props => {
                   return (
                     <StyledTableRow key={row.id}>
                       <StyledTableCell component="th" scope="row" align="left">
-                        {row.local}
+                        <div className={classes.nameContainer}>
+                          { row.bandera1 !== "" &&
+                            <Flag code={ row.bandera1 } height="16"/>
+                          }
+                          <Typography variant="body1">
+                            &nbsp;&nbsp;{row.local}
+                          </Typography>
+                        </div>
                       </StyledTableCell>
-                      <StyledTableCell align="left">{row.visita}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        <div className={classes.nameContainer}>
+                          { row.bandera1 !== "" &&
+                            <Flag code={ row.bandera2 } height="16"/>
+                          }
+                          <Typography variant="body1">
+                            &nbsp;&nbsp;{row.visita}
+                          </Typography>
+                        </div>
+                      </StyledTableCell>
                       <StyledTableCell align="left">
                         { (row.fecha
                           ? row.fecha
@@ -267,7 +292,7 @@ const PartidosTorneo = props => {
                       <StyledTableCell align="left">{row.nombre_ronda}</StyledTableCell>
                       <StyledTableCell align="left">
                         <IconButton 
-                          onClick={ () => handleEdit(row.id) }
+                          onClick={ () => handleEdit(row.id, row.local, row.visita) }
                         >
                           <EventIcon />
                         </IconButton>
@@ -285,8 +310,12 @@ const PartidosTorneo = props => {
       {open &&
         <EditarPartido 
           onClose={()=> setOpen(false)}
-          onOpen={ () => onOpen() }
+          onOpen={ () => props.onPartido() }
           id={ id }
+          fechaInicio={ fechaInicio }
+          fechaFin={ fechaFin }
+          local={ local }
+          visita={ visita }
         />
       }
 

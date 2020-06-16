@@ -47,7 +47,7 @@ export function watchMatches (callback) {
 export function watchMatchesToday (idTorneo, fecha, callback) {
     const unsub = db
     .collection('partidos')
-    .where("torneo", "==", idTorneo)
+    .where("id_torneo", "==", idTorneo)
     .where("fecha", "==", fecha)
     .onSnapshot((snapshot) => {
         const info = [];
@@ -84,6 +84,17 @@ export function watchTorneo (callback) {
                 });
             });
             callback(info);
+        });
+
+    return unsub;
+}
+
+export function watchSingleTorneo (id, callback) {
+    const unsub = db
+        .collection("torneos").doc(id)
+        .onSnapshot((snapshot) => {
+            const data = snapshot.data();
+            callback(data);
         });
 
     return unsub;

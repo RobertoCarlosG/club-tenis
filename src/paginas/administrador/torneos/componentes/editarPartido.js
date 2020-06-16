@@ -4,7 +4,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Button, Dialog, DialogContent, DialogTitle, 
   useMediaQuery, Grid, Typography, DialogActions,
-  Divider,
+  Divider, FormControl, InputLabel, Select,
+  MenuItem
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -23,6 +24,17 @@ const useStyles = makeStyles((theme) => ({
   dialogTitle: {
     textTransform: 'none',
     fontSize: 30,
+    fontWeight: 500,
+    textAlign: 'center'
+  },
+  title: {
+    textTransform: 'none',
+    fontSize: 24,
+    textAlign: 'center'
+  },
+  titleW: {
+    textTransform: 'none',
+    fontSize: 24,
     fontWeight: 500,
     textAlign: 'center'
   },
@@ -90,6 +102,11 @@ const useStyles = makeStyles((theme) => ({
 			backgroundColor: '#C4C4C4',
 		}
   },
+  nameContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 }));
 
 export default function EditarPartido(props) {
@@ -98,11 +115,12 @@ export default function EditarPartido(props) {
 
 	// const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { id } = props;
+  const { id, fechaInicio, fechaFin, local, visita } = props;
 
   const [open] = useState(true);
   const [hora, setHora] = useState(new Date());
   const [fecha, setFecha] = useState(new Date());
+  const [lugar, setLugar] = useState('');
   const [confirm, setConfirm] = useState(false);
 
 	const handleDateChange = (date) => setFecha(date);
@@ -127,10 +145,9 @@ export default function EditarPartido(props) {
   };
 
   const curday = function(sp){
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //As January is 0.
-    var yyyy = today.getFullYear();
+    var dd = fecha.getDate();
+    var mm = fecha.getMonth()+1; //As January is 0.
+    var yyyy = fecha.getFullYear();
     
     if(dd<10) dd='0'+dd;
     if(mm<10) mm='0'+mm;
@@ -143,10 +160,12 @@ export default function EditarPartido(props) {
     const textHora = hours+':'+minutes+' hrs.';
  
     const textFecha = curday('/');
+    console.log('Fecha', textFecha);
 
 		const data = {
       fecha: textFecha,
-      hora: textHora
+      hora: textHora,
+      lugar: lugar
     };
     await updatePartido(id, data)
     .then( () => {
@@ -174,8 +193,38 @@ export default function EditarPartido(props) {
         <Divider />
 				<DialogContent>
           <br />
+          <div className={classes.nameContainer}>
+            <Typography className={classes.titleW} align="center">
+              {local}
+            </Typography>
+            <Typography className={classes.title} align="center">
+              &nbsp;vs&nbsp;
+            </Typography>
+            <Typography className={classes.titleW} align="center">
+              { visita }
+            </Typography>
+          </div> 
+          <br />
 						<Grid container spacing={3} justify="center" alignItems="center">
-							<MuiPickersUtilsProvider className={classes.formControl} utils={DateFnsUtils}>
+              <Grid item xs={12} sm={8} justify="center">
+                <FormControl variant="outlined" fullWidth>
+                  <InputLabel id="label">Lugar</InputLabel>
+                  <Select
+                    labelId="label"
+                    id="select"
+                    value={ lugar }
+                    onChange={ (e) => setLugar(e.target.value) }
+                    label="Lugar"
+                  >
+                    <MenuItem value="Arena 1">Arena 1</MenuItem>
+                    <MenuItem value="Arena 2">Arena 2</MenuItem>
+                    <MenuItem value="Arena 3">Arena 3</MenuItem>
+                    <MenuItem value="Arena 4">Arena 4</MenuItem>
+                    <MenuItem value="Arena 5">Arena 5</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
 								<Grid item xs={12} sm={8} justify="center">
 									<KeyboardDatePicker
 										disableToolbar
@@ -186,7 +235,8 @@ export default function EditarPartido(props) {
 										margin="normal"
 										id="Fecha"
 										label="Fecha"
-										minDate={ Date.now() }
+										minDate={ fechaInicio }
+                    maxDate={ fechaFin }
 										value={ fecha }
 										onChange={ handleDateChange }
 										KeyboardButtonProps={{

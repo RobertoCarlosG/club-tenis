@@ -4,13 +4,18 @@ import { useHistory } from 'react-router-dom';
 import {
   Container, Grid, List, ListItem, ListItemText,
   Card, CardHeader, CardActionArea, CardContent,
-  CardMedia, Divider, Typography, Box
+  CardMedia, Divider, Typography, Paper
 } from '@material-ui/core';
 import Skeleton from '@material-ui/lab/Skeleton';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 import img from '../../imagenes/Logo10.svg';
 import { TorneoContext } from '../../contexto/ctx_torneo';
-import { db, watchMatchesToday } from '../../servicios/firebase';
+import { db, watchMatchesToday, watchSingleTorneo } from '../../servicios/firebase';
 
 function cambiarFondo() {
   document.body.style = 'background: #F7F7F7;';
@@ -23,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
   lista: {
     width: '100%',
     maxWidth: 360,
+    minHeight: 550,
     backgroundColor: theme.palette.background.paper,
   },
   cardHeader: {
@@ -56,14 +62,44 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
+  },
+  instruccion: {
+    fontSize: 14,
+    padding: 'none',
+    margin: 'none',
   },
   estado: {
     fontSize: 14,
     color: theme.palette.secondary.main,
     paddingTop: theme.spacing(1),
   },
+  fecha: {
+    background: '#fff',
+  },
 }));
+
+// Obtener fecha actual.
+const curday = function(sp) {
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth()+1; //As January is 0.
+  var yyyy = today.getFullYear();
+  
+  if(dd<10) dd='0'+dd;
+  if(mm<10) mm='0'+mm;
+  return (dd+sp+mm+sp+yyyy);
+};
+
+const getFecha = function(sp, date) {
+  var dd = date.getDate();
+  var mm = date.getMonth()+1; //As January is 0.
+  var yyyy = date.getFullYear();
+  
+  if(dd<10) dd='0'+dd;
+  if(mm<10) mm='0'+mm;
+  return (dd+sp+mm+sp+yyyy);
+};
 
 function Monitor () {
   const classes = useStyles();
@@ -77,29 +113,33 @@ function Monitor () {
   const [idTorneo, setIdTorneo] = useState('');
   const [partidos, setPartidos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [minDate, setMinDate] = useState(new Date());
+  const [maxDate, setMaxDate] = useState(new Date());
 
-  // Obtener fecha actual.
-  const curday = function(sp){
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //As January is 0.
-    var yyyy = today.getFullYear();
-    
-    if(dd<10) dd='0'+dd;
-    if(mm<10) mm='0'+mm;
-    return (dd+sp+mm+sp+yyyy);
-  };
+  const handleDate = (date) => {
+    setDate(date);
+    setLoading(false);
+    var fecha = getFecha('/', date);
+    watchMatchesToday(idTorneo, fecha, (partidos) => {
+      setPartidos(partidos);
+      setLoading(true);
+    });
+  } 
 
   const handleListItemClick = (id, index) => {
-    var fecha = curday('/');
-    console.log('Id:', id);
-    console.log('Fecha:', fecha);
-    console.log('load', loading);
     setLoading(false);
+    var fecha = curday('/');
 
     watchMatchesToday(id, fecha, (partidos) => {
       setPartidos(partidos);
       setLoading(true);
+    });
+
+    watchSingleTorneo(id, (torneo) => {
+      setMinDate(torneo.fecha_inicio.toDate());
+      setMaxDate(torneo.fecha_fin.toDate());
+      setDate(torneo.fecha_inicio.toDate());
     });
 
     setIdTorneo(id);
@@ -130,6 +170,8 @@ function Monitor () {
         });
       });
       setTournament(info);
+      setMinDate(info[0].fecha_inicio.toDate());
+      setMaxDate(info[0].fecha_fin.toDate());
 
       if (info[0] != undefined) {
         watchMatchesToday(info[0].id, fecha, (partidos) => {
@@ -138,7 +180,7 @@ function Monitor () {
         });
       }
     });
-  }, []);
+  }, []); 
 
   return(
     <div className={classes.root}>
@@ -157,7 +199,7 @@ function Monitor () {
               >
               </CardHeader>
               <Divider />
-              <List className={classes.list} dense component="nav">
+              <List className={classes.lista} dense component="nav">
               { torneos.map( (torneo, index) => {
                   return (
                     <ListItem
@@ -185,6 +227,26 @@ function Monitor () {
             </Card>
           </Grid>
           <Grid item xs={12} sm={8}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    inputVariant="outlined" variant="inline"
+                    format="dd/MM/yyyy" margin="normal"
+                    id="FechaInicio" label="Fecha de los partidos"
+                    className={classes.fecha}
+                    minDate={ minDate }
+                    maxDate={ maxDate }
+                    value={ date }
+                    onChange={ handleDate }
+                    KeyboardButtonProps={{
+                        'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid>
+            </Grid>
             <Grid container spacing={2}>
             { loading ? (
               partidos.length ? (
@@ -226,28 +288,31 @@ function Monitor () {
                 ) : ( 
                   <Typography className={ classes.title }>
                   <br />
-                    Este torneo no tiene partidos hoy.
+                    &nbsp;&nbsp;Este torneo no tiene partidos en la fecha seleccionada. :(
                   <br />
                   </Typography>
                 )
               ) : (
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Skeleton variant="rect" width={210} height={118} />
-                    <Skeleton variant="text" width={210} />
-                    <Skeleton variant="text" width={210} />
+                <div>
+                  <br />
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <Skeleton variant="rect" width={210} height={118} />
+                      <Skeleton variant="text" width={210} />
+                      <Skeleton variant="text" width={210} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <Skeleton variant="rect" width={210} height={118} />
+                      <Skeleton variant="text" width={210} />
+                      <Skeleton variant="text" width={210} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <Skeleton variant="rect" width={210} height={118} />
+                      <Skeleton variant="text" width={210} />
+                      <Skeleton variant="text" width={210} />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Skeleton variant="rect" width={210} height={118} />
-                    <Skeleton variant="text" width={210} />
-                    <Skeleton variant="text" width={210} />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Skeleton variant="rect" width={210} height={118} />
-                    <Skeleton variant="text" width={210} />
-                    <Skeleton variant="text" width={210} />
-                  </Grid>
-                </Grid>
+                </div>
               )
             }
             </Grid>

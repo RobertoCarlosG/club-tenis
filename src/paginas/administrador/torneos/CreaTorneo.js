@@ -458,7 +458,7 @@ export default function CrearTorneo(props) {
                 {"\n"}
               </Typography>
             </Grid>
-            <Grid item xs={6} sm={4}>  
+            <Grid item xs={6} sm={5}>  
               <Button
                 fullWidth
                 type="submit"
@@ -470,7 +470,7 @@ export default function CrearTorneo(props) {
                 Guardar
               </Button>
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={6} sm={5}>
               <Button
                 fullWidth
                 type="submit"

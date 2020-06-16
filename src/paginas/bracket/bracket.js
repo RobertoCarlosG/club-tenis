@@ -30,7 +30,7 @@ export default function Bracket () {
     
         const partidosRef = db.collection('partidos')
         .where("id_torneo", "==", idTorneo)
-        .orderBy("ronda");
+        .orderBy("ronda").orderBy("numero");
         partidosRef.onSnapshot((snapshot) => {
         const info = [];
         
@@ -83,6 +83,7 @@ export default function Bracket () {
         <div>
             <Grid
                 container
+                spacing={2}
                 direction="row"
                 justify="center"
                 alignItems="center"
@@ -99,7 +100,7 @@ export default function Bracket () {
                     )
                     :
                     (
-                        <Grid item xs={12} sm={10}>
+                        <Grid item xs={12} sm={11}>
                             <Reacket matches={matches} />
                         </Grid>
                     )
