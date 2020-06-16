@@ -27,6 +27,7 @@ import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import EventIcon from '@material-ui/icons/Event';
 import RoomIcon from '@material-ui/icons/Room';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 
 const StyledTableCell = withStyles((theme) => ({
@@ -52,6 +53,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     padding: theme.spacing(2),
   },
+  torneo_end:{
+    display: 'flex',
+    height: '100%',
+    flexDirection: 'column',
+    boxShadow:'4px 3px 4px 4px rgba(105, 20, 15, 0.50)',
+    borderRadius: '7px',
+  },
   table:{
     minWidth:595,
     borderRadius:'7px',
@@ -60,8 +68,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     height: '100%',
     flexDirection: 'column',
-    boxShadow:'3px 5px 5px rgba(0, 0, 0, 0.32)',
+    boxShadow:'1px 2px 4px 4px rgba(64, 120, 85, 0.52)',
     borderRadius: '7px',
+    borderTopColor: '#25d366',
   },
   card_title: {
     color: theme.palette.common.white,
@@ -195,6 +204,7 @@ const Detalles = props => {
   const [torneo, setTorneo] = useState([]);    
 
   const handleDetails = (id,local,visita,lugar,duracion,hora,set1,set2,set3,ronda,fecha) =>{
+
     setId(id);
     setLocal(local);
     setVisita(visita);
@@ -219,7 +229,7 @@ const Detalles = props => {
 
   useEffect(() => {
     const abortController = new AbortController();
-    const partidosRef = db.collection('partidos').where("torneo", "==", idTorneo);
+    const partidosRef = db.collection('partidos').where("id_torneo", "==", idTorneo);
     partidosRef.onSnapshot( snapshot => {
       let torneo_name;
       snapshot.forEach(doc => {
@@ -227,7 +237,7 @@ const Detalles = props => {
           nombre, local, visita,
           torneo, fecha, hora,
           ganador, puntos_local,
-          puntos_visita, ronda,
+          puntos_visita, nombre_ronda,
           estado,set1,set2,set3,
           duracion,lugar
         } = doc.data();
@@ -236,11 +246,11 @@ const Detalles = props => {
           nombre, local, visita,
           torneo, fecha, hora,
           ganador, puntos_local,
-          puntos_visita, ronda,
+          puntos_visita, nombre_ronda,
           estado,set1,set2,set3,
           duracion,lugar
         });
-         torneo_name = doc.data().torneo;
+         torneo_name = doc.data().id_torneo;
       });
       console.log(datos);
       setPartidos(datos);
@@ -267,16 +277,34 @@ const Detalles = props => {
       <Grid item xs={12} >
         <Typography className={classes.title}>
           <center> { torneo }</center> 
+          
         </Typography>
+        <Button>
+          <FiberManualRecordIcon style={{color: '#407855'}}/>
+          <Typography>
+            Partidos por definir
+          </Typography>
+        </Button>
+        <br />
+        
+        <Button>
+          <FiberManualRecordIcon style={{color: '#69140f'}}/>
+          <Typography>
+            Partidos Terminados
+          </Typography>
+        </Button>
       </Grid>
     </Grid> 
     <Grid container spacing={4}>
         { partidos.map(partido => {
+          
+          if (partido.estado == 'Terminado')
                 return(
                 <Grid item key={partido.id} xs={12} sm={6} md={4}>
                     <Card 
-                    className={classes.card}
-                    onClick={ () => handleDetails(partido.id,partido.local,partido.visita,partido.lugar,partido.duracion,partido.hora,partido.set1,partido.set2,partido.set3,partido.ronda,partido.fecha) }
+                    
+                    className={ classes.torneo_end}
+                    onClick={ () => handleDetails(partido.id,partido.local,partido.visita,partido.lugar,partido.duracion,partido.hora,partido.set1,partido.set2,partido.set3,partido.nombre_ronda,partido.fecha) }
                     >
                       <center>
                         <Typography className={classes.topCard }>
@@ -297,6 +325,32 @@ const Detalles = props => {
                     </Card>
                 </Grid>
                 );
+                return(
+                  <Grid item key={partido.id} xs={12} sm={6} md={4}>
+                      <Card 
+                      
+                      className={ classes.card}
+                      onClick={ () => handleDetails(partido.id,partido.local,partido.visita,partido.lugar,partido.duracion,partido.hora,partido.set1,partido.set2,partido.set3,partido.nombre_ronda,partido.fecha) }
+                      >
+                        <center>
+                          <Typography className={classes.topCard }>
+                              {partido.estado}
+                          </Typography>
+                        </center>  
+                        <CardMedia
+                            className={classes.media}
+                            image="https://source.unsplash.com/random"
+                            title="Partido"
+                          />
+                        <CardContent className={ classes.cardContent }>
+                          <Typography className={ classes.titleCard }>
+                          &nbsp;&nbsp;&nbsp;&nbsp; {partido.local} vs {partido.visita}
+                          </Typography>
+                            
+                        </CardContent>
+                      </Card>
+                  </Grid>
+                  );
             })}
       </Grid>
     <Dialog

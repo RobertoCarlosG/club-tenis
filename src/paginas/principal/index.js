@@ -26,7 +26,6 @@ const mainFeaturedPost = {
 const featuredPosts = [
   {
     title: 'Torneos cada verano',
-    date: 'Nov 12',
     description:
       'Torneos Realizados en conjunto a distintas organizaciones para competir por el trofeo.',
     image: 'https://source.unsplash.com/random',
@@ -34,7 +33,6 @@ const featuredPosts = [
   },
   {
     title: 'Los mejores jugadores',
-    date: 'Nov 11',
     description:
       'Ranking de los mejores jugadores registrados como miembros de una federacion.',
     image: 'https://source.unsplash.com/random',

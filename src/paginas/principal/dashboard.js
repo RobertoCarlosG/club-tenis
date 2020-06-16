@@ -88,7 +88,6 @@ const Principal = () => {
   console.log(torneos);
 
   const handleDetails = (id) => {
-    
     const ruta = 'inicio/torneo/'+id;
     history.push(ruta);
   }

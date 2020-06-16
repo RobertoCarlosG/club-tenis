@@ -92,7 +92,7 @@ const Topbar = props => {
           onClick={ welcome }
         />
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button color="inherit" onClick={ goindex } className={classes.btn_activo1}>Torneos</Button>
+        <Button color="inherit" onClick={ goindex } className={classes.btn_activo1}>Torneos</Button>&nbsp;
         <Button color="inherit" onClick={ handleRanking }>Ranking</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
