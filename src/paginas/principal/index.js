@@ -28,14 +28,14 @@ const featuredPosts = [
     title: 'Torneos cada verano',
     description:
       'Torneos Realizados en conjunto a distintas organizaciones para competir por el trofeo.',
-    image: 'https://source.unsplash.com/random',
+    image: 'https://i.pinimg.com/originals/02/0c/6b/020c6b5545335089be035773bb44ceb1.jpg',
     imageText: 'Image Text',
   },
   {
     title: 'Los mejores jugadores',
     description:
       'Ranking de los mejores jugadores registrados como miembros de una federacion.',
-    image: 'https://source.unsplash.com/random',
+    image: 'https://image.freepik.com/vector-gratis/aislante-jugadores-tenis-fondo-blanco_80590-3430.jpg',
     imageText: 'Image Text',
   },
 ];
