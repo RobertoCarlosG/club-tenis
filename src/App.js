@@ -8,11 +8,17 @@ import Usuarios from './paginas/administrador/usuarios/usuarios';
 import DetallesTorneo from './paginas/administrador/torneos/detalles_torneo';
 import Monitor from './paginas/monitor/monitor';
 import DetallesPartido from './paginas/monitor/componentes/detallesPartido';
+import { MainAdm, MainMonitor } from './layout';
+import Capturista from './paginas/capturista/dashboard';
 import { AuthProvider } from './contexto/auth';
 import { TorneoContextProvider } from './contexto/ctx_torneo';
 import GuardRoute from './modulos/guardRoute';
-import { MainAdm, MainMonitor } from './layout';
+import MainAdm from './layout/mainAdm';
 import theme from './modulos/theme';
+import Principal from './paginas/principal/dashboard';
+import Detalles from './paginas/principal/verTorneo';
+import Ranking from './paginas/principal/ranking';
+import Index from './paginas/principal/index';
 
 import Bracket from './paginas/bracket/bracket';
 
@@ -57,8 +63,18 @@ function App() {
                   layout={ MainMonitor }
                 />
                 <Route path="/bracket" component={ Bracket } />
+                <GuardRoute
+                  path="/capturista"
+                  component={ Capturista }
+                  exact
+                  layout={ MainCap }
+                />
+                <Route exact path="/inicio" component={ Principal } />     
+                <Route exact path="/inicio/torneo/:idTorneo" component ={ Detalles } />  
+                <Route exact path="/inicio/ranking" component ={ Ranking } />
+                <Route exact path="/dashboard" component = { Index } />   
                 <Route exact path="/login" component={ Autenticarse } />
-                <Redirect from="/" to ="/login" />
+                <Redirect from="/" to ="/dashboard" />
               </Switch>
             </TorneoContextProvider>
           </AuthProvider>

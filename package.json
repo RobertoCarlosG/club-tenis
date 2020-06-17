@@ -24,6 +24,10 @@
     "reacket": "^1.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.0.1",
+    "react-excel-renderer": "^1.1.0",
+    "react-file-reader": "^1.1.4",
+    "react-material-ui-carousel": "^1.5.1",
     "react-material-ui-form-validator": "^2.0.10",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
@@ -33,7 +37,8 @@
     "react-tournament-grid": "0.0.20",
     "react-world-flags": "^1.3.0",
     "styled-components": "^5.1.1",
-    "underscore": "^1.10.2"
+    "underscore": "^1.10.2",
+    "xlsx": "^0.16.1"
   },
   "scripts": {
     "start": "react-scripts start",

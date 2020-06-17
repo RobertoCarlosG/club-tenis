@@ -128,6 +128,10 @@ const Autenticarse = () => {
       history.push('/monitor');
       console.log('Logeado: ', tipo);
     }
+    if (tipo == 'Capturista' || tipo == 'Personal administrativo') {
+      history.push('/capturista');
+      console.log('Logeado');
+    }
   }
 
   const handleSignIn = async (event, tipo) => {
@@ -199,7 +203,6 @@ const Autenticarse = () => {
       }).catch(err => {
         console.log('Error: ', err);
       });
-
     }, [history]
   );
 

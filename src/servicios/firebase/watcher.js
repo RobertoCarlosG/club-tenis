@@ -99,3 +99,45 @@ export function watchSingleTorneo (id, callback) {
 
     return unsub;
 }
+
+export function watchJugador (callback) {
+    const unsub = db
+        .collection("jugadores")
+        .where("sexo", "==", "M")
+        .onSnapshot((snapshot) => {
+            const info = [];
+
+            snapshot.forEach((information) => {
+                const data = information.data();
+                
+                info.push({
+                    ...data,
+                    id: information.id,
+                });
+            });
+            callback(info);
+        });
+
+    return unsub;
+}
+
+export function watchJugadorMujer (callback) {
+    const unsub = db
+        .collection("jugadores")
+        .where("sexo", "==", "F")
+        .onSnapshot((snapshot) => {
+            const info = [];
+
+            snapshot.forEach((information) => {
+                const data = information.data();
+                
+                info.push({
+                    ...data,
+                    id: information.id,
+                });
+            });
+            callback(info);
+        });
+
+    return unsub;
+}
